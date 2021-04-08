@@ -2,6 +2,7 @@ package com.simon.rise.updates.ui.main;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -21,11 +22,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
-        super(fm);
+        super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
     }
 
     @Override
+    @NonNull
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
