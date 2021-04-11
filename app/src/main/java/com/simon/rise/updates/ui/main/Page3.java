@@ -46,7 +46,6 @@ public class Page3 extends Fragment {
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main3, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, textView::setText);
         return root;
     }
 }
