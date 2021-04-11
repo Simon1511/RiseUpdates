@@ -44,7 +44,7 @@ public class Page2 extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_main2, container, false);
+        View root = inflater.inflate(R.layout.fragment_page2, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
         return root;
     }
