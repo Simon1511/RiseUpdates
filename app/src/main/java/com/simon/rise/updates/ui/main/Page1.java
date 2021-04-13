@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.simon.rise.updates.HttpAndJsonParser;
 import com.simon.rise.updates.R;
 
 /**
@@ -46,6 +47,10 @@ public class Page1 extends Fragment {
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_page1, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
+
+        // Get latest kernel version from github JSON and set it
+        HttpAndJsonParser pullAndParse = new HttpAndJsonParser(R.id.textView_latestVersion, "riseKernel", root);
+
         return root;
     }
 }
