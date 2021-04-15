@@ -74,7 +74,7 @@
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_marginBottom="466dp"
-        android:background="@color/white"
+        android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.7"
