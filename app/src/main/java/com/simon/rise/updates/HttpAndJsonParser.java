@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,6 +23,7 @@ import okhttp3.Response;
 public class HttpAndJsonParser {
 
     private TextView text;
+    private List<String> itemList = new ArrayList<>();
 
     public HttpAndJsonParser(int textId, String toUpdate, View root) {
 
@@ -53,6 +56,9 @@ public class HttpAndJsonParser {
                                     JSONObject oneObject = jArray.getJSONObject(i);
                                     String oneObjectsItem = oneObject.getString(toUpdate);
                                     text.setText(oneObjectsItem);
+                                    /* Add the String we got from the JSON to an
+                                    Arraylist in case we need it later, e.g. for a spinner. */
+                                    itemList.add(oneObjectsItem);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -64,5 +70,13 @@ public class HttpAndJsonParser {
                 }
             }
         });
+    }
+
+    public List getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(String jsonString) {
+        itemList.add(jsonString);
     }
 }
