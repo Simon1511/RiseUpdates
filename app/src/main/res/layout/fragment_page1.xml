@@ -71,13 +71,13 @@
 
     <Spinner
         android:id="@+id/spinner_page1"
-        android:layout_width="100dp"
+        android:layout_width="160dp"
         android:layout_height="40dp"
         android:layout_marginBottom="466dp"
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

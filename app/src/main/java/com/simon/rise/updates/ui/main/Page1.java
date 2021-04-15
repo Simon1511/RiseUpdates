@@ -57,6 +57,10 @@ public class Page1 extends Fragment {
         Spinner spinner1 = root.findViewById(R.id.spinner_page1);
         ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_spinner_item, pullAndParse.getItemList());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter1.add("Select a version");
+
         spinner1.setAdapter(adapter1);
 
         return root;
