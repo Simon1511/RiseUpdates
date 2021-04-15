@@ -54,11 +54,15 @@ public class HttpAndJsonParser {
                             {
                                 try {
                                     JSONObject oneObject = jArray.getJSONObject(i);
-                                    String oneObjectsItem = oneObject.getString(toUpdate);
-                                    text.setText(oneObjectsItem);
-                                    /* Add the String we got from the JSON to an
-                                    Arraylist in case we need it later, e.g. for a spinner. */
-                                    itemList.add(oneObjectsItem);
+                                    JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
+
+                                    for(int j=0; j<jsonArray.length(); j++) {
+                                        /* Add the String we got from the JSON to an
+                                        Arraylist in case we need it later, e.g. for a spinner. */
+                                        itemList.add(jsonArray.getString(j));
+                                        // Show the newest version in our textView
+                                        text.setText(jsonArray.getString(0));
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
