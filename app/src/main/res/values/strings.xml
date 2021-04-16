@@ -4,4 +4,6 @@
     <string name="tab_text_2">Rise-Q</string>
     <string name="tab_text_3">riseTreble</string>
     <string name="chooseVersion_text">Choose version:</string>
+    <string name="afh_download">Androidfilehost</string>
+    <string name="gdrive_download">Google Drive</string>
 </resources>
