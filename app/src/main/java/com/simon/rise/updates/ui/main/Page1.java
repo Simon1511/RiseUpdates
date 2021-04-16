@@ -48,7 +48,6 @@ public class Page1 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_page1, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
 
         // Get latest kernel version from github JSON and set it
         HttpAndJsonParser pullAndParse = new HttpAndJsonParser(R.id.textView_latestVersion, "riseKernel", root);
