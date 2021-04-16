@@ -3,7 +3,6 @@ package com.simon.rise.updates.json;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,11 +14,8 @@ import java.util.List;
 public class JSONParser {
 
     private List<String> itemList = new ArrayList<>();
-    private TextView text;
 
-    public void parseJSON(int textId, String myResponse, String toUpdate, View root) {
-
-        text = root.findViewById(textId);
+    public void parseJSON(String myResponse, String toUpdate, View root) {
 
         new Handler(Looper.getMainLooper()).post(() -> {
             JSONArray jArray;
@@ -36,9 +32,6 @@ public class JSONParser {
                             /* Add the String we got from the JSON to an
                             Arraylist in case we need it later, e.g. for a spinner. */
                             itemList.add(jsonArray.getString(j));
-
-                            // Show the newest version in our textView
-                            text.setText(jsonArray.getString(0));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

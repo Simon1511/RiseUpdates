@@ -55,7 +55,7 @@ public class Page1 extends Fragment {
         HTTPConnecting connect = new HTTPConnecting(parser);
 
         // Get latest kernel version from github JSON and set it
-        connect.connectURL(R.id.textView_latestVersion, "riseKernel", root);
+        connect.connectURL("riseKernel", root);
 
         // Create a dropdown-list
         Spinner spinner1 = root.findViewById(R.id.spinner_page1);
@@ -64,7 +64,7 @@ public class Page1 extends Fragment {
 
         /* Show this as initial item in our spinner.
         Otherwise, selected items won't show in spinner's preview. */
-        adapter1.add("Select a version");
+        adapter1.add("");
 
         spinner1.setAdapter(adapter1);
 
