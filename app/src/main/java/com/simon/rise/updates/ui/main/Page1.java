@@ -52,13 +52,18 @@ public class Page1 extends Fragment {
         /* Create an instance of HTTPConnecting and
         pass a new instance of JSONParser to it */
         JSONParser parser = new JSONParser();
+        JSONParser parser2 = new JSONParser();
         HTTPConnecting connect = new HTTPConnecting(parser);
+        HTTPConnecting connect2 = new HTTPConnecting(parser2);
 
         // Get latest kernel version from github JSON and set it
         connect.connectURL("riseKernel", root);
 
+        // Get kernel types from github JSON
+        connect2.connectURL("kernelType", root);
+
         // Create a dropdown-list
-        Spinner spinner1 = root.findViewById(R.id.spinner_page1);
+        Spinner spinner1 = root.findViewById(R.id.spinner1_page1);
         ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(root.getContext(), R.layout.spinner_item, parser.getItemList());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -67,6 +72,17 @@ public class Page1 extends Fragment {
         adapter1.add("");
 
         spinner1.setAdapter(adapter1);
+
+        // Show selection between AOSP Q (default), Treble Q and AOSP Pie
+        Spinner spinner2 = root.findViewById(R.id.spinner2_page1);
+        ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<>(root.getContext(), R.layout.spinner_item, parser2.getItemList());
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter2.add("");
+
+        spinner2.setAdapter(adapter2);
 
         return root;
     }
