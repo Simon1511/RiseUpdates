@@ -59,7 +59,7 @@ public class Page1 extends Fragment {
 
         // Create a dropdown-list
         Spinner spinner1 = root.findViewById(R.id.spinner_page1);
-        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_spinner_item, parser.getItemList());
+        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(root.getContext(), R.layout.spinner_item, parser.getItemList());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         /* Show this as initial item in our spinner.
