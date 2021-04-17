@@ -7,37 +7,48 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.Page1">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1_page1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2_page1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
     <TextView
         android:id="@+id/textView_page1"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginBottom="360dp"
+        android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline1_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView_chooseVersion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="566dp"
+        android:layout_width="170dp"
+        android:layout_height="30dp"
         android:text="@string/chooseVersion_text"
         android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/spinner_page1"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="560dp"
+        android:layout_width="145dp"
+        android:layout_height="30dp"
         android:background="@drawable/spinner_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent" />
@@ -46,23 +57,24 @@
         android:id="@+id/button_AFH"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="370dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/afh_download"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.098"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_gdrive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="370dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/gdrive_download"
-        android:enabled="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
