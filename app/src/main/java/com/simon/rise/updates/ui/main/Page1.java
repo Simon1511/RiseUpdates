@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -56,6 +58,14 @@ public class Page1 extends Fragment {
         HTTPConnecting connect = new HTTPConnecting(parser);
         HTTPConnecting connect2 = new HTTPConnecting(parser2);
 
+        // Initialize AFH and GDrive download buttons
+        Button gdrive = root.findViewById(R.id.button_gdrive);
+        Button afh = root.findViewById(R.id.button_AFH);
+
+        // Gray out both buttons by default
+        afh.setEnabled(false);
+        gdrive.setEnabled(false);
+
         // Get latest kernel version from github JSON and set it
         connect.connectURL("riseKernel", root);
 
@@ -84,6 +94,114 @@ public class Page1 extends Fragment {
 
         spinner2.setAdapter(adapter2);
 
+        // Gray out buttons depending on type and version selected in spinners
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setButtons(spinner1, spinner2, afh, gdrive);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        // Gray out buttons depending on type and version selected in spinners
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setButtons(spinner1, spinner2, afh, gdrive);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        afh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        gdrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return root;
+    }
+
+    public void setButtons(Spinner spinner1, Spinner spinner2, Button afh, Button gdrive) {
+        String spinnerItem1 = spinner1.getSelectedItem().toString();
+        String spinnerItem2 = spinner2.getSelectedItem().toString();
+
+        if(spinnerItem1.equals("") || spinnerItem2.equals("")) {
+            afh.setEnabled(false);
+            gdrive.setEnabled(false);
+        }
+
+        /* AOSP 10.0
+        Include everything except for v3 (Pie only)*/
+        if(spinnerItem2.equals("AOSP 10.0")) {
+            if(spinnerItem1.equals("v1.2") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1")) {
+                afh.setEnabled(true);
+                gdrive.setEnabled(false);
+            }
+            else
+            {
+                afh.setEnabled(true);
+                gdrive.setEnabled(true);
+            }
+
+            if(spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+                afh.setEnabled(false);
+                gdrive.setEnabled(false);
+            }
+        }
+
+        /* Treble 10.0
+        Only include v1.3 and newer, except for v3 (Pie only) */
+        if(spinnerItem2.equals("Treble 10.0")) {
+            afh.setEnabled(true);
+            gdrive.setEnabled(true);
+
+            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
+                    || spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+                afh.setEnabled(false);
+                gdrive.setEnabled(false);
+            }
+        }
+
+        /* OneUI 10.0
+        Only include v1.5 and newer */
+        if(spinnerItem2.equals("OneUI 10.0")) {
+            afh.setEnabled(true);
+            gdrive.setEnabled(true);
+
+            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
+                    || spinnerItem1.equals("v1.3")|| spinnerItem1.equals("v1.4") || spinnerItem1.equals("v1.4-1")
+                    || spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+                afh.setEnabled(false);
+                gdrive.setEnabled(false);
+            }
+        }
+
+        /* AOSP 9.0
+        We only include v3 and 1.4X and newer versions */
+        if(spinnerItem2.equals("AOSP 9.0")) {
+            afh.setEnabled(true);
+            gdrive.setEnabled(true);
+
+            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
+                    || spinnerItem1.equals("v1.3") || spinnerItem1.equals("")) {
+                afh.setEnabled(false);
+                gdrive.setEnabled(false);
+            }
+        }
+
     }
 }
