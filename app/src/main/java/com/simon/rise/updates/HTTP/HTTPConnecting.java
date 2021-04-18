@@ -21,11 +21,9 @@ public class HTTPConnecting {
         this.parser = parser;
     }
 
-    public void connectURL(String toUpdate, View root) {
+    public void connectURL(String toUpdate, View root, String url) {
 
         OkHttpClient client = new OkHttpClient();
-
-        String url = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
 
         Request request = new Request.Builder().url(url).build();
 

@@ -58,6 +58,8 @@ public class Page1 extends Fragment {
         HTTPConnecting connect = new HTTPConnecting(parser);
         HTTPConnecting connect2 = new HTTPConnecting(parser2);
 
+        String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
+
         // Initialize AFH and GDrive download buttons
         Button gdrive = root.findViewById(R.id.button_gdrive);
         Button afh = root.findViewById(R.id.button_AFH);
@@ -67,10 +69,10 @@ public class Page1 extends Fragment {
         gdrive.setEnabled(false);
 
         // Get latest kernel version from github JSON and set it
-        connect.connectURL("riseKernel", root);
+        connect.connectURL("riseKernel", root, versionsURL);
 
         // Get kernel types from github JSON
-        connect2.connectURL("kernelType", root);
+        connect2.connectURL("kernelType", root, versionsURL);
 
         // Create a dropdown-list
         Spinner spinner1 = root.findViewById(R.id.spinner1_page1);
