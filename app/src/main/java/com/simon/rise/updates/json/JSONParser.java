@@ -15,7 +15,10 @@ public class JSONParser {
 
     private List<String> itemList = new ArrayList<>();
 
+    private String toUpdate2;
+
     public void parseJSON(String myResponse, String toUpdate, View root) {
+        toUpdate2 = toUpdate;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             JSONArray jArray;
@@ -45,5 +48,9 @@ public class JSONParser {
 
     public List getItemList() {
         return itemList;
+    }
+
+    public String getToUpdate() {
+        return toUpdate2;
     }
 }

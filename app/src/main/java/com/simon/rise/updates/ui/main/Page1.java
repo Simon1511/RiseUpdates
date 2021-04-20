@@ -1,5 +1,7 @@
 package com.simon.rise.updates.ui.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.R;
+import com.simon.rise.updates.SystemProperties.SystemProperties;
 import com.simon.rise.updates.json.JSONParser;
 
 /**
@@ -55,10 +58,13 @@ public class Page1 extends Fragment {
         pass a new instance of JSONParser to it */
         JSONParser parser = new JSONParser();
         JSONParser parser2 = new JSONParser();
+        JSONParser parser3 = new JSONParser();
         HTTPConnecting connect = new HTTPConnecting(parser);
         HTTPConnecting connect2 = new HTTPConnecting(parser2);
+        HTTPConnecting connect3 = new HTTPConnecting(parser3);
 
         String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
+        String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
 
         // Initialize AFH and GDrive download buttons
         Button gdrive = root.findViewById(R.id.button_gdrive);
@@ -101,6 +107,20 @@ public class Page1 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons(spinner1, spinner2, afh, gdrive);
+
+                if(spinner2.getSelectedItem().toString().equals("")) {
+                    spinner1.setSelection(0);
+                    spinner1.setEnabled(false);
+                }
+                else
+                if(spinner2.getSelectedItem().toString() != parser2.getItemList().toString()) {
+                    spinner1.setSelection(0);
+                    spinner1.setEnabled(true);
+                }
+
+                if(spinner2.getSelectedItem().toString().equals("")) {
+                    parser3.getItemList().clear();
+                }
             }
 
             @Override
@@ -113,6 +133,46 @@ public class Page1 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons(spinner1, spinner2, afh, gdrive);
+
+                SystemProperties props = new SystemProperties();
+
+                // Get download links for whatever is selected in the spinner
+                if(spinner1.getSelectedItem().toString() != "") {
+                    // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
+                    if(spinner2.getSelectedItem().toString().equals("Treble 10.0") && spinner1.getSelectedItem().toString().equals("v1.3")) {
+                        connect3.connectURL("v1.3T", root, downloadURL);
+                    }
+                    else
+                    if(spinner1.getSelectedItem().toString().equals("v1.2") || spinner1.getSelectedItem().toString().equals("v1.1")
+                            || spinner1.getSelectedItem().toString().equals("v1")) {
+                        if(props.read("ro.boot.bootloader") != null) {
+                            if (props.read("ro.boot.bootloader").contains("A520")) {
+                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a5", root, downloadURL);
+                            } else if (props.read("ro.boot.bootloader").contains("A720")) {
+                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a7", root, downloadURL);
+                            } else {
+                                afh.setEnabled(false);
+                                gdrive.setEnabled(false);
+                            }
+                        }
+                        else
+                        {
+                            afh.setEnabled(false);
+                            gdrive.setEnabled(false);
+                        }
+                    }
+                    else
+                    {
+                        connect3.connectURL(spinner1.getSelectedItem().toString(), root, downloadURL);
+                    }
+                }
+
+                /* Check if the selection changed and if so, clear
+                our ArrayList */
+                if(spinner1.getSelectedItem().toString() != parser3.getToUpdate()) {
+                    parser3.getItemList().clear();
+                }
+
             }
 
             @Override
@@ -124,14 +184,28 @@ public class Page1 extends Fragment {
         afh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    Uri uri = Uri.parse(parser3.getItemList().get(0).toString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+                catch(IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         gdrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    Uri uri = Uri.parse(parser3.getItemList().get(1).toString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+                catch(IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return root;
