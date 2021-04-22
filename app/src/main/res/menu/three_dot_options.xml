@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/checkUpdate"
+        android:title="Update"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/checkUpdate2"
+        android:title="Update2"
+        app:showAsAction="never"
+        android:visible="true" />
+
+</menu>

@@ -46,6 +46,7 @@ public class Page1 extends Fragment {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+        setHasOptionsMenu(true);
     }
 
     @Override
