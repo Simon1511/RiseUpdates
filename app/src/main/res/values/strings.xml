@@ -7,6 +7,5 @@
     <string name="chooseType_text">Choose type:</string>
     <string name="afh_download">Androidfilehost</string>
     <string name="gdrive_download">Google Drive</string>
-    <string name="checkForUpdate">Check for update</string>
     <string name="settingsOption">Settings</string>
 </resources>
