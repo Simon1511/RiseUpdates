@@ -29,6 +29,29 @@ public class Page1 extends Fragment {
 
     private PageViewModel pageViewModel;
 
+    /* Make the View object created in onCreateView
+    available to the whole class */
+    protected View fragmentView;
+
+    /* Create instances of HTTPConnecting and
+    pass a new instance of JSONParser to it */
+    private JSONParser parser = new JSONParser();
+    private JSONParser parser2 = new JSONParser();
+    private JSONParser parser3 = new JSONParser();
+    private HTTPConnecting connect = new HTTPConnecting(parser);
+    private HTTPConnecting connect2 = new HTTPConnecting(parser2);
+    private HTTPConnecting connect3 = new HTTPConnecting(parser3);
+
+    // URLs
+    private String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
+    private String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+
+    private Button afh;
+    private Button gdrive;
+
+    private Spinner spinner1;
+    private Spinner spinner2;
+
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
         Bundle bundle = new Bundle();
@@ -55,133 +78,34 @@ public class Page1 extends Fragment {
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_page1, container, false);
 
-        /* Create an instance of HTTPConnecting and
-        pass a new instance of JSONParser to it */
-        JSONParser parser = new JSONParser();
-        JSONParser parser2 = new JSONParser();
-        JSONParser parser3 = new JSONParser();
-        HTTPConnecting connect = new HTTPConnecting(parser);
-        HTTPConnecting connect2 = new HTTPConnecting(parser2);
-        HTTPConnecting connect3 = new HTTPConnecting(parser3);
-
-        String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
-        String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+        this.fragmentView = root;
 
         // Initialize AFH and GDrive download buttons
-        Button gdrive = root.findViewById(R.id.button_gdrive);
-        Button afh = root.findViewById(R.id.button_AFH);
+        gdrive = root.findViewById(R.id.button_gdrive);
+        afh = root.findViewById(R.id.button_AFH);
 
         // Gray out both buttons by default
         afh.setEnabled(false);
         gdrive.setEnabled(false);
 
+        getTypeVersion();
+
+        initializeSpinners();
+        onClickSpinners();
+        onClickButtons();
+
+        return root;
+    }
+
+    public void getTypeVersion() {
         // Get latest kernel version from github JSON and set it
-        connect.connectURL("riseKernel", root, versionsURL);
+        connect.connectURL("riseKernel", fragmentView, versionsURL);
 
         // Get kernel types from github JSON
-        connect2.connectURL("kernelType", root, versionsURL);
+        connect2.connectURL("kernelType", fragmentView, versionsURL);
+    }
 
-        // Create a dropdown-list
-        Spinner spinner1 = root.findViewById(R.id.spinner1_page1);
-        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(root.getContext(), R.layout.spinner_item, parser.getItemList());
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        /* Show this as initial item in our spinner.
-        Otherwise, selected items won't show in spinner's preview. */
-        adapter1.add("");
-
-        spinner1.setAdapter(adapter1);
-
-        // Show selection between AOSP Q (default), Treble Q and AOSP Pie
-        Spinner spinner2 = root.findViewById(R.id.spinner2_page1);
-        ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<>(root.getContext(), R.layout.spinner_item, parser2.getItemList());
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        /* Show this as initial item in our spinner.
-        Otherwise, selected items won't show in spinner's preview. */
-        adapter2.add("");
-
-        spinner2.setAdapter(adapter2);
-
-        // Gray out buttons depending on type and version selected in spinners
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setButtons(spinner1, spinner2, afh, gdrive);
-
-                if(spinner2.getSelectedItem().toString().equals("")) {
-                    spinner1.setSelection(0);
-                    spinner1.setEnabled(false);
-                }
-                else
-                if(spinner2.getSelectedItem().toString() != parser2.getItemList().toString()) {
-                    spinner1.setSelection(0);
-                    spinner1.setEnabled(true);
-                }
-
-                if(spinner2.getSelectedItem().toString().equals("")) {
-                    parser3.getItemList().clear();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        // Gray out buttons depending on type and version selected in spinners
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setButtons(spinner1, spinner2, afh, gdrive);
-
-                SystemProperties props = new SystemProperties();
-
-                // Get download links for whatever is selected in the spinner
-                if(spinner1.getSelectedItem().toString() != "") {
-                    // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
-                    if(spinner2.getSelectedItem().toString().equals("Treble 10.0") && spinner1.getSelectedItem().toString().equals("v1.3")) {
-                        connect3.connectURL("v1.3T", root, downloadURL);
-                    }
-                    else
-                    if(spinner1.getSelectedItem().toString().equals("v1.2") || spinner1.getSelectedItem().toString().equals("v1.1")
-                            || spinner1.getSelectedItem().toString().equals("v1")) {
-                        if(props.read("ro.boot.bootloader") != null) {
-                            if (props.read("ro.boot.bootloader").contains("A520")) {
-                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a5", root, downloadURL);
-                            } else if (props.read("ro.boot.bootloader").contains("A720")) {
-                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a7", root, downloadURL);
-                            } else {
-                                afh.setEnabled(false);
-                                gdrive.setEnabled(false);
-                            }
-                        }
-                        else
-                        {
-                            afh.setEnabled(false);
-                            gdrive.setEnabled(false);
-                        }
-                    }
-                    else
-                    {
-                        connect3.connectURL(spinner1.getSelectedItem().toString(), root, downloadURL);
-                    }
-                }
-
-                /* Check if the selection changed and if so, clear
-                our ArrayList */
-                if(spinner1.getSelectedItem().toString() != parser3.getToUpdate()) {
-                    parser3.getItemList().clear();
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+    public void onClickButtons() {
         afh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,10 +133,116 @@ public class Page1 extends Fragment {
                 }
             }
         });
-        return root;
     }
 
-    public void setButtons(Spinner spinner1, Spinner spinner2, Button afh, Button gdrive) {
+    public void initializeSpinners() {
+        // Create a dropdown-list for all versions of the kernel
+        spinner1 = fragmentView.findViewById(R.id.spinner1_page1);
+
+        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter1.add("");
+
+        spinner1.setAdapter(adapter1);
+
+        // Create a dropdown-list for AOSP Q (default), Treble Q and AOSP Pie
+        spinner2 = fragmentView.findViewById(R.id.spinner2_page1);
+
+        ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser2.getItemList());
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter2.add("");
+
+        spinner2.setAdapter(adapter2);
+    }
+
+    public void onClickSpinners() {
+        // Gray out buttons depending on type and version selected in spinners
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setButtons();
+
+                if(spinner2.getSelectedItem().toString().equals("")) {
+                    spinner1.setSelection(0);
+                    spinner1.setEnabled(false);
+                }
+                else
+                if(spinner2.getSelectedItem().toString() != parser2.getItemList().toString()) {
+                    spinner1.setSelection(0);
+                    spinner1.setEnabled(true);
+                }
+
+                if(spinner2.getSelectedItem().toString().equals("")) {
+                    parser3.getItemList().clear();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        // Gray out buttons depending on type and version selected in spinners
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setButtons();
+
+                SystemProperties props = new SystemProperties();
+
+                // Get download links for whatever is selected in the spinner
+                if(spinner1.getSelectedItem().toString() != "") {
+                    // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
+                    if(spinner2.getSelectedItem().toString().equals("Treble 10.0") && spinner1.getSelectedItem().toString().equals("v1.3")) {
+                        connect3.connectURL("v1.3T", fragmentView, downloadURL);
+                    }
+                    else
+                    if(spinner1.getSelectedItem().toString().equals("v1.2") || spinner1.getSelectedItem().toString().equals("v1.1")
+                            || spinner1.getSelectedItem().toString().equals("v1")) {
+                        if(props.read("ro.boot.bootloader") != null) {
+                            if (props.read("ro.boot.bootloader").contains("A520")) {
+                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a5", fragmentView, downloadURL);
+                            } else if (props.read("ro.boot.bootloader").contains("A720")) {
+                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a7", fragmentView, downloadURL);
+                            } else {
+                                afh.setEnabled(false);
+                                gdrive.setEnabled(false);
+                            }
+                        }
+                        else
+                        {
+                            afh.setEnabled(false);
+                            gdrive.setEnabled(false);
+                        }
+                    }
+                    else
+                    {
+                        connect3.connectURL(spinner1.getSelectedItem().toString(), fragmentView, downloadURL);
+                    }
+                }
+
+                /* Check if the selection changed and if so, clear
+                our ArrayList */
+                if(spinner1.getSelectedItem().toString() != parser3.getToUpdate()) {
+                    parser3.getItemList().clear();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void setButtons() {
         String spinnerItem1 = spinner1.getSelectedItem().toString();
         String spinnerItem2 = spinner2.getSelectedItem().toString();
 
