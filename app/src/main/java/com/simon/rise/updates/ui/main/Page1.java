@@ -80,6 +80,10 @@ public class Page1 extends Fragment {
 
         this.fragmentView = root;
 
+        parser.getItemList().clear();
+        parser2.getItemList().clear();
+        parser3.getItemList().clear();
+
         // Initialize AFH and GDrive download buttons
         gdrive = root.findViewById(R.id.button_gdrive);
         afh = root.findViewById(R.id.button_AFH);
