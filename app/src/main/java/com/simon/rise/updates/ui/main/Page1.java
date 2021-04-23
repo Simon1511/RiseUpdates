@@ -98,11 +98,11 @@ public class Page1 extends Fragment {
     }
 
     public void getTypeVersion() {
-        // Get latest kernel version from github JSON and set it
-        connect.connectURL("riseKernel", fragmentView, versionsURL);
-
         // Get kernel types from github JSON
-        connect2.connectURL("kernelType", fragmentView, versionsURL);
+        connect.connectURL("kernelType", fragmentView, versionsURL);
+
+        // Get kernel versions from github JSON
+        connect2.connectURL("riseKernel", fragmentView, versionsURL);
     }
 
     public void onClickButtons() {
@@ -136,7 +136,7 @@ public class Page1 extends Fragment {
     }
 
     public void initializeSpinners() {
-        // Create a dropdown-list for all versions of the kernel
+        // Create a dropdown-list for AOSP Q (default), Treble Q and AOSP Pie
         spinner1 = fragmentView.findViewById(R.id.spinner1_page1);
 
         ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
@@ -148,7 +148,7 @@ public class Page1 extends Fragment {
 
         spinner1.setAdapter(adapter1);
 
-        // Create a dropdown-list for AOSP Q (default), Treble Q and AOSP Pie
+        // Create a dropdown-list for all versions of the kernel
         spinner2 = fragmentView.findViewById(R.id.spinner2_page1);
 
         ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser2.getItemList());
@@ -163,22 +163,22 @@ public class Page1 extends Fragment {
 
     public void onClickSpinners() {
         // Gray out buttons depending on type and version selected in spinners
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons();
 
-                if(spinner2.getSelectedItem().toString().equals("")) {
-                    spinner1.setSelection(0);
-                    spinner1.setEnabled(false);
+                if(spinner1.getSelectedItem().toString().equals("")) {
+                    spinner2.setSelection(0);
+                    spinner2.setEnabled(false);
                 }
                 else
-                if(spinner2.getSelectedItem().toString() != parser2.getItemList().toString()) {
-                    spinner1.setSelection(0);
-                    spinner1.setEnabled(true);
+                if(spinner1.getSelectedItem().toString() != parser.getItemList().toString()) {
+                    spinner2.setSelection(0);
+                    spinner2.setEnabled(true);
                 }
 
-                if(spinner2.getSelectedItem().toString().equals("")) {
+                if(spinner1.getSelectedItem().toString().equals("")) {
                     parser3.getItemList().clear();
                 }
             }
@@ -189,7 +189,7 @@ public class Page1 extends Fragment {
         });
 
         // Gray out buttons depending on type and version selected in spinners
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons();
@@ -197,19 +197,19 @@ public class Page1 extends Fragment {
                 SystemProperties props = new SystemProperties();
 
                 // Get download links for whatever is selected in the spinner
-                if(spinner1.getSelectedItem().toString() != "") {
+                if(spinner2.getSelectedItem().toString() != "") {
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
-                    if(spinner2.getSelectedItem().toString().equals("Treble 10.0") && spinner1.getSelectedItem().toString().equals("v1.3")) {
+                    if(spinner1.getSelectedItem().toString().equals("Treble 10.0") && spinner2.getSelectedItem().toString().equals("v1.3")) {
                         connect3.connectURL("v1.3T", fragmentView, downloadURL);
                     }
                     else
-                    if(spinner1.getSelectedItem().toString().equals("v1.2") || spinner1.getSelectedItem().toString().equals("v1.1")
-                            || spinner1.getSelectedItem().toString().equals("v1")) {
+                    if(spinner2.getSelectedItem().toString().equals("v1.2") || spinner2.getSelectedItem().toString().equals("v1.1")
+                            || spinner2.getSelectedItem().toString().equals("v1")) {
                         if(props.read("ro.boot.bootloader") != null) {
                             if (props.read("ro.boot.bootloader").contains("A520")) {
-                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a5", fragmentView, downloadURL);
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL);
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
-                                connect3.connectURL(spinner1.getSelectedItem().toString() + "_a7", fragmentView, downloadURL);
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL);
                             } else {
                                 afh.setEnabled(false);
                                 gdrive.setEnabled(false);
@@ -223,13 +223,13 @@ public class Page1 extends Fragment {
                     }
                     else
                     {
-                        connect3.connectURL(spinner1.getSelectedItem().toString(), fragmentView, downloadURL);
+                        connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL);
                     }
                 }
 
                 /* Check if the selection changed and if so, clear
                 our ArrayList */
-                if(spinner1.getSelectedItem().toString() != parser3.getToUpdate()) {
+                if(spinner2.getSelectedItem().toString() != parser3.getToUpdate()) {
                     parser3.getItemList().clear();
                 }
 
@@ -253,8 +253,8 @@ public class Page1 extends Fragment {
 
         /* AOSP 10.0
         Include everything except for v3 (Pie only)*/
-        if(spinnerItem2.equals("AOSP 10.0")) {
-            if(spinnerItem1.equals("v1.2") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1")) {
+        if(spinnerItem1.equals("AOSP 10.0")) {
+            if(spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
                 afh.setEnabled(true);
                 gdrive.setEnabled(false);
             }
@@ -264,7 +264,7 @@ public class Page1 extends Fragment {
                 gdrive.setEnabled(true);
             }
 
-            if(spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+            if(spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
                 afh.setEnabled(false);
                 gdrive.setEnabled(false);
             }
@@ -272,12 +272,12 @@ public class Page1 extends Fragment {
 
         /* Treble 10.0
         Only include v1.3 and newer, except for v3 (Pie only) */
-        if(spinnerItem2.equals("Treble 10.0")) {
+        if(spinnerItem1.equals("Treble 10.0")) {
             afh.setEnabled(true);
             gdrive.setEnabled(true);
 
-            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
-                    || spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                    || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
                 afh.setEnabled(false);
                 gdrive.setEnabled(false);
             }
@@ -285,13 +285,13 @@ public class Page1 extends Fragment {
 
         /* OneUI 10.0
         Only include v1.5 and newer */
-        if(spinnerItem2.equals("OneUI 10.0")) {
+        if(spinnerItem1.equals("OneUI 10.0")) {
             afh.setEnabled(true);
             gdrive.setEnabled(true);
 
-            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
-                    || spinnerItem1.equals("v1.3")|| spinnerItem1.equals("v1.4") || spinnerItem1.equals("v1.4-1")
-                    || spinnerItem1.equals("v3 (Pie)") || spinnerItem1.equals("")) {
+            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                    || spinnerItem2.equals("v1.3")|| spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
+                    || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
                 afh.setEnabled(false);
                 gdrive.setEnabled(false);
             }
@@ -299,12 +299,12 @@ public class Page1 extends Fragment {
 
         /* AOSP 9.0
         We only include v3 and 1.4X and newer versions */
-        if(spinnerItem2.equals("AOSP 9.0")) {
+        if(spinnerItem1.equals("AOSP 9.0")) {
             afh.setEnabled(true);
             gdrive.setEnabled(true);
 
-            if(spinnerItem1.equals("v1") || spinnerItem1.equals("v1.1") || spinnerItem1.equals("v1.2")
-                    || spinnerItem1.equals("v1.3") || spinnerItem1.equals("")) {
+            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                    || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
                 afh.setEnabled(false);
                 gdrive.setEnabled(false);
             }
