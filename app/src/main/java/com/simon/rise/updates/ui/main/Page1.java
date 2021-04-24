@@ -48,8 +48,8 @@ public class Page1 extends Fragment {
     private HTTPConnecting connect3 = new HTTPConnecting(parser3);
 
     // URLs
-    private String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
-    private String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+    private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
+    private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
 
     private Button afh;
     private Button gdrive;
