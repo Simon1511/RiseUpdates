@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,6 +22,9 @@ import com.simon.rise.updates.R;
 import com.simon.rise.updates.SystemProperties.SystemProperties;
 import com.simon.rise.updates.json.JSONParser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -97,6 +102,8 @@ public class Page1 extends Fragment {
         initializeSpinners();
         onClickSpinners();
         onClickButtons();
+
+        checkInstalled();
 
         return root;
     }
@@ -313,6 +320,40 @@ public class Page1 extends Fragment {
                 gdrive.setEnabled(false);
             }
         }
+    }
 
+    public void checkInstalled() {
+        try {
+            TextView tv = fragmentView.findViewById(R.id.textView_kernelVersion);
+            Process process = new ProcessBuilder().command("/system/bin/uname", "-r").redirectErrorStream(true).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String variable = "v";
+            String line = bufferedReader.readLine();
+            ImageView image = fragmentView.findViewById(R.id.imageView1_page1);
+
+            int lineIndex = line.indexOf(variable);
+
+            if(line.contains(variable)) {
+                if(line.contains("riseKernel") || line.contains("ProjectRise")) {
+                    if(line.substring(lineIndex).equals("v4")) {
+                        tv.setText("v1.4-1");
+                    }
+                    else
+                    {
+                        tv.setText(line.substring(lineIndex));
+                    }
+                    image.setImageResource(R.drawable.ic_hook_icon);
+                }
+            }
+            else
+            {
+                tv.setText(R.string.kernelNotInstalled);
+                image.setImageResource(R.drawable.ic_x_icon);
+            }
+        }
+        catch(IOException e)  {
+            e.printStackTrace();
+        }
     }
 }

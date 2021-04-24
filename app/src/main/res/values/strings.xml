@@ -8,4 +8,6 @@
     <string name="afh_download">Androidfilehost</string>
     <string name="gdrive_download">Google Drive</string>
     <string name="settingsOption">Settings</string>
+    <string name="kernelInstalled">Installed version:</string>
+    <string name="kernelNotInstalled">None</string>
 </resources>
