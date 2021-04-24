@@ -1,5 +1,6 @@
 package com.simon.rise.updates;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
