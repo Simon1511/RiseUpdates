@@ -1,2 +1,23 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Updates"
+        android:layout="@layout/settings_texts" >
+
+        <Preference
+            android:key="updateButton"
+            android:summary="Check for app update" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="About"
+        android:layout="@layout/settings_texts">
+
+        <Preference
+            android:icon="@drawable/avatar"
+            android:persistent="false"
+            android:selectable="true"
+            android:summary="RiseUpdates by Simon1511.\nAll rights belong to me.\nv1.0 built on [DATE]" />
+    </PreferenceCategory>
 </PreferenceScreen>
