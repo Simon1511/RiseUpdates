@@ -340,64 +340,87 @@ public class Page1 extends Fragment {
             gdrive.setEnabled(false);
         }
 
-        /* AOSP 10.0
-        Include everything except for v3 (Pie only)*/
-        if(spinnerItem1.equals("AOSP 10.0")) {
-            if(spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
-                afh.setEnabled(true);
-                gdrive.setEnabled(false);
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                while(parser3.getItemList().size() < 1) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(parser3.getItemList().size() >= 1) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            /* AOSP 10.0
+                            Include everything except for v3 (Pie only)*/
+                            if(spinnerItem1.equals("AOSP 10.0")) {
+                                if(spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
+                                    afh.setEnabled(true);
+                                    gdrive.setEnabled(false);
+                                }
+                                else
+                                {
+                                    afh.setEnabled(true);
+                                    gdrive.setEnabled(true);
+                                }
+
+                                if(spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                    afh.setEnabled(false);
+                                    gdrive.setEnabled(false);
+                                }
+                            }
+
+                            /* Treble 10.0
+                            Only include v1.3 and newer, except for v3 (Pie only) */
+                            if(spinnerItem1.equals("Treble 10.0")) {
+                                afh.setEnabled(true);
+                                gdrive.setEnabled(true);
+
+                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                        || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                    afh.setEnabled(false);
+                                    gdrive.setEnabled(false);
+                                }
+                            }
+
+                            /* OneUI 10.0
+                            Only include v1.5 and newer */
+                            if(spinnerItem1.equals("OneUI 10.0")) {
+                                afh.setEnabled(true);
+                                gdrive.setEnabled(true);
+
+                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                        || spinnerItem2.equals("v1.3")|| spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
+                                        || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                    afh.setEnabled(false);
+                                    gdrive.setEnabled(false);
+                                }
+                            }
+
+                            /* AOSP 9.0
+                               We only include v3 and 1.4X and newer versions */
+                            if(spinnerItem1.equals("AOSP 9.0")) {
+                                afh.setEnabled(true);
+                                gdrive.setEnabled(true);
+
+                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                        || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
+                                    afh.setEnabled(false);
+                                    gdrive.setEnabled(false);
+                                }
+                            }
+                        }
+                    });
+                }
             }
-            else
-            {
-                afh.setEnabled(true);
-                gdrive.setEnabled(true);
-            }
+        };
 
-            if(spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                afh.setEnabled(false);
-                gdrive.setEnabled(false);
-            }
-        }
-
-        /* Treble 10.0
-        Only include v1.3 and newer, except for v3 (Pie only) */
-        if(spinnerItem1.equals("Treble 10.0")) {
-            afh.setEnabled(true);
-            gdrive.setEnabled(true);
-
-            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                    || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                afh.setEnabled(false);
-                gdrive.setEnabled(false);
-            }
-        }
-
-        /* OneUI 10.0
-        Only include v1.5 and newer */
-        if(spinnerItem1.equals("OneUI 10.0")) {
-            afh.setEnabled(true);
-            gdrive.setEnabled(true);
-
-            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                    || spinnerItem2.equals("v1.3")|| spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
-                    || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                afh.setEnabled(false);
-                gdrive.setEnabled(false);
-            }
-        }
-
-        /* AOSP 9.0
-        We only include v3 and 1.4X and newer versions */
-        if(spinnerItem1.equals("AOSP 9.0")) {
-            afh.setEnabled(true);
-            gdrive.setEnabled(true);
-
-            if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                    || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
-                afh.setEnabled(false);
-                gdrive.setEnabled(false);
-            }
-        }
+        Thread t = new Thread(run);
+        t.start();
     }
 
     public void checkInstalled() {
