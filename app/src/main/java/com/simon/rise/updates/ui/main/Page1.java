@@ -58,6 +58,7 @@ public class Page1 extends Fragment {
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
     private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+    private static final String xdaURL = "https://forum.xda-developers.com/t/kernel-9-0-10-0-aosp-risekernel-for-a5-a7-2017.3988891/";
 
     private Button afh;
     private Button gdrive;
@@ -66,6 +67,8 @@ public class Page1 extends Fragment {
     private Spinner spinner2;
 
     SystemProperties props = new SystemProperties();
+
+    private SupportButtons spB;
 
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
@@ -94,6 +97,9 @@ public class Page1 extends Fragment {
         View root = inflater.inflate(R.layout.fragment_page1, container, false);
 
         this.fragmentView = root;
+
+        spB = new SupportButtons(getContext());
+        spB.supportButtons(fragmentView, xdaURL);
 
         parser.getItemList().clear();
         parser2.getItemList().clear();
