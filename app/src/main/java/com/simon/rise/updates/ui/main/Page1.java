@@ -66,7 +66,7 @@ public class Page1 extends Fragment {
     private Spinner spinner1;
     private Spinner spinner2;
 
-    SystemProperties props = new SystemProperties();
+    private SystemProperties props = new SystemProperties();
 
     private SupportButtons spB;
 
