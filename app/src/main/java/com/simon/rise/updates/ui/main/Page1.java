@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -63,6 +64,8 @@ public class Page1 extends Fragment {
 
     private Spinner spinner1;
     private Spinner spinner2;
+
+    SystemProperties props = new SystemProperties();
 
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
@@ -283,8 +286,6 @@ public class Page1 extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons();
 
-                SystemProperties props = new SystemProperties();
-
                 // Get download links for whatever is selected in the spinner
                 if(spinner2.getSelectedItem().toString() != "") {
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
@@ -355,63 +356,67 @@ public class Page1 extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            /* AOSP 10.0
-                            Include everything except for v3 (Pie only)*/
-                            if(spinnerItem1.equals("AOSP 10.0")) {
-                                if(spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
-                                    afh.setEnabled(true);
-                                    gdrive.setEnabled(false);
+                            if(props.read("ro.boot.bootloader").contains("A520") || props.read("ro.boot.bootloader").contains("A720")) {
+                                /* AOSP 10.0
+                                Include everything except for v3 (Pie only)*/
+                                if (spinnerItem1.equals("AOSP 10.0")) {
+                                    if (spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
+                                        afh.setEnabled(true);
+                                        gdrive.setEnabled(false);
+                                    } else {
+                                        afh.setEnabled(true);
+                                        gdrive.setEnabled(true);
+                                    }
+
+                                    if (spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                        afh.setEnabled(false);
+                                        gdrive.setEnabled(false);
+                                    }
                                 }
-                                else
-                                {
+
+                                /* Treble 10.0
+                                Only include v1.3 and newer, except for v3 (Pie only) */
+                                if (spinnerItem1.equals("Treble 10.0")) {
                                     afh.setEnabled(true);
                                     gdrive.setEnabled(true);
+
+                                    if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                            || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                        afh.setEnabled(false);
+                                        gdrive.setEnabled(false);
+                                    }
                                 }
 
-                                if(spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                    afh.setEnabled(false);
-                                    gdrive.setEnabled(false);
+                                /* OneUI 10.0
+                                Only include v1.5 and newer */
+                                if (spinnerItem1.equals("OneUI 10.0")) {
+                                    afh.setEnabled(true);
+                                    gdrive.setEnabled(true);
+
+                                    if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                            || spinnerItem2.equals("v1.3") || spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
+                                            || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
+                                        afh.setEnabled(false);
+                                        gdrive.setEnabled(false);
+                                    }
+                                }
+
+                                /* AOSP 9.0
+                                We only include v3 and 1.4X and newer versions */
+                                if (spinnerItem1.equals("AOSP 9.0")) {
+                                    afh.setEnabled(true);
+                                    gdrive.setEnabled(true);
+
+                                    if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
+                                            || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
+                                        afh.setEnabled(false);
+                                        gdrive.setEnabled(false);
+                                    }
                                 }
                             }
-
-                            /* Treble 10.0
-                            Only include v1.3 and newer, except for v3 (Pie only) */
-                            if(spinnerItem1.equals("Treble 10.0")) {
-                                afh.setEnabled(true);
-                                gdrive.setEnabled(true);
-
-                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                                        || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                    afh.setEnabled(false);
-                                    gdrive.setEnabled(false);
-                                }
-                            }
-
-                            /* OneUI 10.0
-                            Only include v1.5 and newer */
-                            if(spinnerItem1.equals("OneUI 10.0")) {
-                                afh.setEnabled(true);
-                                gdrive.setEnabled(true);
-
-                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                                        || spinnerItem2.equals("v1.3")|| spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
-                                        || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                    afh.setEnabled(false);
-                                    gdrive.setEnabled(false);
-                                }
-                            }
-
-                            /* AOSP 9.0
-                               We only include v3 and 1.4X and newer versions */
-                            if(spinnerItem1.equals("AOSP 9.0")) {
-                                afh.setEnabled(true);
-                                gdrive.setEnabled(true);
-
-                                if(spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                                        || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
-                                    afh.setEnabled(false);
-                                    gdrive.setEnabled(false);
-                                }
+                            else
+                            {
+                                Toast.makeText(getActivity(), "Not an A5/A7", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
