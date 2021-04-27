@@ -84,6 +84,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
+        Preference easterEgg = findPreference("about");
+        easterEgg.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(getActivity(), "( ͡° ͜ʖ ͡°)", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     @Override

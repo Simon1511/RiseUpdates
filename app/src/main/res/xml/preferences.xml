@@ -15,6 +15,7 @@
         android:layout="@layout/settings_texts">
 
         <Preference
+            android:key="about"
             android:icon="@drawable/avatar"
             android:persistent="false"
             android:selectable="true"
