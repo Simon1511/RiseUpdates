@@ -1,11 +1,16 @@
 package com.simon.rise.updates.ui.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,8 +48,15 @@ public class Page2 extends Fragment {
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
     private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+    private static final String xdaURL = "https://forum.xda-developers.com/t/rom-10-0-oneui-2-5-rise-q-v2-0-for-a5-and-a7-2017.4203007/";
 
-    private SystemProperties props = new SystemProperties();
+    private final SystemProperties props = new SystemProperties();
+
+    private Button dlButton;
+
+    private final AlertDialogRunnable alr = new AlertDialogRunnable();
+
+    private SupportButtons spB;
 
     public static Page2 newInstance(int index) {
         Page2 fragment = new Page2();
@@ -73,9 +85,17 @@ public class Page2 extends Fragment {
 
         this.fragmentView = root;
 
+        spB = new SupportButtons(getActivity());
+        spB.supportButtons(fragmentView, xdaURL);
+
+        dlButton = fragmentView.findViewById(R.id.button_dl_page2);
+        dlButton.setEnabled(false);
+
         getVersions();
         initializeSpinners();
         onClickSpinners();
+
+        onClickButtons();
 
         checkInstalled();
 
@@ -102,29 +122,79 @@ public class Page2 extends Fragment {
 
         // Create a dropdown-list for download mirrors
         spinner2 = fragmentView.findViewById(R.id.spinner2_page2);
-
-        ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser2.getItemList());
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        /* Show this as initial item in our spinner.
-        Otherwise, selected items won't show in spinner's preview. */
-        adapter2.add("");
-
-        spinner2.setAdapter(adapter2);
     }
 
     public void onClickSpinners()  {
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinner1.getSelectedItem().toString().equals("")) {
+                if(spinner1.getSelectedItem().equals("")) {
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
                 }
-                else
-                if(spinner1.getSelectedItem().toString() != parser.getItemList().toString()) {
-                    spinner2.setSelection(0);
-                    spinner2.setEnabled(true);
+
+                if(spinner1.getSelectedItem() != "") {
+                    // Get Rise-Q downloads from Github JSON
+                    connect2.connectURL(spinner1.getSelectedItem().toString(), fragmentView, downloadURL, "rise-q");
+                    Runnable run = new Runnable() {
+                        @Override
+                        public void run() {
+
+                            /* Run this once in an if-clause and then in a while-loop */
+                            if(parser2.getItemList().size() <= 1) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        alr.updateAlert(parser, parser2, getActivity());
+                                    }
+                                });
+                            }
+
+                            while(parser2.getItemList().size() <= 1) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if(parser2.getItemList().size() > 1) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+                                        dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        dlAdapter.add("");
+                                        for(int i = 0; i<parser2.getItemList().size(); i++) {
+                                            if (parser2.getItemList().get(i).toString().contains("mega")) {
+                                                dlAdapter.add("MEGA");
+                                            }
+
+                                            if (parser2.getItemList().get(i).toString().contains("google")) {
+                                                dlAdapter.add("Google Drive");
+                                            }
+
+                                            if (parser2.getItemList().get(i).toString().contains("1drv")) {
+                                                dlAdapter.add("OneDrive");
+                                            }
+
+                                            if (parser2.getItemList().get(i).toString().contains("androidfilehost")) {
+                                                dlAdapter.add("Androidfilehost");
+                                            }
+                                        }
+                                        spinner2.setAdapter(dlAdapter);
+                                        spinner2.setEnabled(true);
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    Thread t = new Thread(run);
+                    t.start();
+                }
+
+                if(spinner1.getSelectedItem().toString() != parser2.getToUpdate()) {
+                    parser2.getItemList().clear();
                 }
             }
 
@@ -136,11 +206,48 @@ public class Page2 extends Fragment {
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                if(spinner2.getSelectedItem().toString() != "") {
+                    dlButton.setEnabled(true);
+                }
+                else
+                {
+                    dlButton.setEnabled(false);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    public void onClickButtons() {
+        dlButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dlURL = "";
+
+                if (spinner2.getSelectedItem().equals("Google Drive")) {
+                    dlURL = parser2.getItemList().get(0).toString();
+                }
+                else
+                if (spinner2.getSelectedItem().equals("MEGA") || spinner2.getSelectedItem().equals("OneDrive")) {
+                    dlURL = parser2.getItemList().get(1).toString();
+                }
+                else
+                if (spinner2.getSelectedItem().equals("Androidfilehost")) {
+                    dlURL = parser2.getItemList().get(2).toString();
+                }
+
+                if (dlURL != "") {
+                    try {
+                        Uri uri = Uri.parse(dlURL);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
