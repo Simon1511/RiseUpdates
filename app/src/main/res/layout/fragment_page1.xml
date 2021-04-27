@@ -43,7 +43,7 @@
         app:layout_constraintGuide_percent="0.75" />
 
     <TextView
-        android:id="@+id/textView_page1"
+        android:id="@+id/textView1_page1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_chooseVersion"
+        android:id="@+id/textView_chooseVersion_page1"
         android:layout_width="170dp"
         android:layout_height="30dp"
         android:text="@string/chooseVersion_text"
@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView_chooseType"
+        android:id="@+id/textView_chooseType_page1"
         android:layout_width="170dp"
         android:layout_height="30dp"
         android:text="@string/chooseType_text"
@@ -98,35 +98,35 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_AFH"
+        android:id="@+id/button_AFH_page1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="@string/afh_download"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_page1"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.098"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_gdrive"
+        android:id="@+id/button_gdrive_page1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="@string/gdrive_download"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_page1"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView_installed"
+        android:id="@+id/textView_installedVersion_page1"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/kernelInstalled"
+        android:text="@string/installedVersion"
         android:textColor="@color/white"
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page1"
@@ -135,7 +135,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView_kernelVersion"
+        android:id="@+id/textView_version_page1"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"

@@ -106,8 +106,8 @@ public class Page1 extends Fragment {
         parser3.getItemList().clear();
 
         // Initialize AFH and GDrive download buttons
-        gdrive = root.findViewById(R.id.button_gdrive);
-        afh = root.findViewById(R.id.button_AFH);
+        gdrive = root.findViewById(R.id.button_gdrive_page1);
+        afh = root.findViewById(R.id.button_AFH_page1);
 
         // Gray out both buttons by default
         afh.setEnabled(false);
@@ -436,7 +436,7 @@ public class Page1 extends Fragment {
 
     public void checkInstalled() {
         try {
-            TextView tv = fragmentView.findViewById(R.id.textView_kernelVersion);
+            TextView tv = fragmentView.findViewById(R.id.textView_version_page1);
             Process process = new ProcessBuilder().command("/system/bin/uname", "-r").redirectErrorStream(true).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -460,7 +460,7 @@ public class Page1 extends Fragment {
             }
             else
             {
-                tv.setText(R.string.kernelNotInstalled);
+                tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }
         }
