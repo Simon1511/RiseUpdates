@@ -55,11 +55,11 @@ public class Page1 extends Fragment {
     private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
     private static final String xdaURL = "https://forum.xda-developers.com/t/kernel-9-0-10-0-aosp-risekernel-for-a5-a7-2017.3988891/";
 
-    private Button afh;
-    private Button gdrive;
+    private Button dlButton;
 
     private Spinner spinner1;
     private Spinner spinner2;
+    private Spinner spinner3;
 
     private SystemProperties props = new SystemProperties();
 
@@ -103,12 +103,10 @@ public class Page1 extends Fragment {
         parser3.getItemList().clear();
 
         // Initialize AFH and GDrive download buttons
-        gdrive = root.findViewById(R.id.button_gdrive_page1);
-        afh = root.findViewById(R.id.button_AFH_page1);
+        dlButton = root.findViewById(R.id.button_dl_page1);
 
         // Gray out both buttons by default
-        afh.setEnabled(false);
-        gdrive.setEnabled(false);
+        dlButton.setEnabled(false);
 
         getTypeVersion();
 
@@ -132,30 +130,31 @@ public class Page1 extends Fragment {
     }
 
     public void onClickButtons() {
-        afh.setOnClickListener(new View.OnClickListener() {
+        dlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Uri uri = Uri.parse(parser3.getItemList().get(0).toString());
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-                catch(IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                String dlURL = "";
 
-        gdrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Uri uri = Uri.parse(parser3.getItemList().get(1).toString());
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                if (spinner3.getSelectedItem().equals("Google Drive")) {
+                    dlURL = parser3.getItemList().get(0).toString();
                 }
-                catch(IndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                else
+                if (spinner3.getSelectedItem().equals("MEGA") || spinner3.getSelectedItem().equals("OneDrive")) {
+                    dlURL = parser2.getItemList().get(1).toString();
+                }
+                else
+                if (spinner3.getSelectedItem().equals("Androidfilehost")) {
+                    dlURL = parser3.getItemList().get(2).toString();
+                }
+
+                if (dlURL != "") {
+                    try {
+                        Uri uri = Uri.parse(dlURL);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -185,6 +184,9 @@ public class Page1 extends Fragment {
         adapter2.add("");
 
         spinner2.setAdapter(adapter2);
+
+        // Create a dropdown-list for download mirrors
+        spinner3 = fragmentView.findViewById(R.id.spinner3_page1);
     }
 
     public void onClickSpinners() {
@@ -197,6 +199,7 @@ public class Page1 extends Fragment {
                 if(spinner1.getSelectedItem().toString().equals("")) {
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
+                    spinner3.setEnabled(false);
                 }
                 else
                 if(spinner1.getSelectedItem().toString() != parser.getItemList().toString()) {
@@ -220,6 +223,11 @@ public class Page1 extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setButtons();
 
+                if(spinner2.getSelectedItem().equals("")) {
+                    spinner3.setSelection(0);
+                    spinner3.setEnabled(false);
+                }
+
                 // Get download links for whatever is selected in the spinner
                 if(spinner2.getSelectedItem().toString() != "") {
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
@@ -235,20 +243,74 @@ public class Page1 extends Fragment {
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
                                 connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL, "riseKernel");
                             } else {
-                                afh.setEnabled(false);
-                                gdrive.setEnabled(false);
+                                dlButton.setEnabled(false);
                             }
                         }
                         else
                         {
-                            afh.setEnabled(false);
-                            gdrive.setEnabled(false);
+                            dlButton.setEnabled(false);
                         }
                     }
                     else
                     {
                         connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL, "riseKernel");
                     }
+
+                    Runnable run = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            /* Run this once in an if-clause and then in a while-loop */
+                            if(parser3.getItemList().size() <= 1) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        alr.updateAlert(parser2, parser3, getActivity());
+                                    }
+                                });
+                            }
+
+                            while(parser3.getItemList().size() <= 1) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if(parser3.getItemList().size() > 1) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+                                        dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        dlAdapter.add("");
+                                        for(int i = 0; i<parser3.getItemList().size(); i++) {
+                                            if (parser3.getItemList().get(i).toString().contains("mega")) {
+                                                dlAdapter.add("MEGA");
+                                            }
+
+                                            if (parser3.getItemList().get(i).toString().contains("google")) {
+                                                dlAdapter.add("Google Drive");
+                                            }
+
+                                            if (parser3.getItemList().get(i).toString().contains("1drv")) {
+                                                dlAdapter.add("OneDrive");
+                                            }
+
+                                            if (parser3.getItemList().get(i).toString().contains("androidfilehost")) {
+                                                dlAdapter.add("Androidfilehost");
+                                            }
+                                        }
+                                        spinner3.setAdapter(dlAdapter);
+                                        spinner3.setEnabled(true);
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    Thread t = new Thread(run);
+                    t.start();
                 }
 
                 /* Check if the selection changed and if so, clear
@@ -264,6 +326,17 @@ public class Page1 extends Fragment {
 
             }
         });
+
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setButtons();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     public void setButtons() {
@@ -271,9 +344,17 @@ public class Page1 extends Fragment {
         String spinnerItem2 = spinner2.getSelectedItem().toString();
 
         if(spinnerItem1.equals("") || spinnerItem2.equals("")) {
-            afh.setEnabled(false);
-            gdrive.setEnabled(false);
+            dlButton.setEnabled(false);
         }
+
+        if(spinner3.getSelectedItem() == null || spinner3.getSelectedItem().toString().equals("")) {
+            dlButton.setEnabled(false);
+        }
+        else
+        if(spinner3.getSelectedItem().toString() != "") {
+            dlButton.setEnabled(true);
+        }
+
 
         Runnable run = new Runnable() {
             @Override
@@ -294,57 +375,36 @@ public class Page1 extends Fragment {
                                 /* AOSP 10.0
                                 Include everything except for v3 (Pie only)*/
                                 if (spinnerItem1.equals("AOSP 10.0")) {
-                                    if (spinnerItem2.equals("v1.2") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1")) {
-                                        afh.setEnabled(true);
-                                        gdrive.setEnabled(false);
-                                    } else {
-                                        afh.setEnabled(true);
-                                        gdrive.setEnabled(true);
-                                    }
-
-                                    if (spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                        afh.setEnabled(false);
-                                        gdrive.setEnabled(false);
+                                    if(spinnerItem2.equals("v3 (Pie)")) {
+                                        spinner3.setEnabled(false);
                                     }
                                 }
 
                                 /* Treble 10.0
                                 Only include v1.3 and newer, except for v3 (Pie only) */
                                 if (spinnerItem1.equals("Treble 10.0")) {
-                                    afh.setEnabled(true);
-                                    gdrive.setEnabled(true);
-
                                     if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                                            || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                        afh.setEnabled(false);
-                                        gdrive.setEnabled(false);
+                                            || spinnerItem2.equals("v3 (Pie)")) {
+                                        spinner3.setEnabled(false);
                                     }
                                 }
 
                                 /* OneUI 10.0
                                 Only include v1.5 and newer */
                                 if (spinnerItem1.equals("OneUI 10.0")) {
-                                    afh.setEnabled(true);
-                                    gdrive.setEnabled(true);
-
                                     if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
                                             || spinnerItem2.equals("v1.3") || spinnerItem2.equals("v1.4") || spinnerItem2.equals("v1.4-1")
-                                            || spinnerItem2.equals("v3 (Pie)") || spinnerItem2.equals("")) {
-                                        afh.setEnabled(false);
-                                        gdrive.setEnabled(false);
+                                            || spinnerItem2.equals("v3 (Pie)")) {
+                                        spinner3.setEnabled(false);
                                     }
                                 }
 
                                 /* AOSP 9.0
                                 We only include v3 and 1.4X and newer versions */
                                 if (spinnerItem1.equals("AOSP 9.0")) {
-                                    afh.setEnabled(true);
-                                    gdrive.setEnabled(true);
-
                                     if (spinnerItem2.equals("v1") || spinnerItem2.equals("v1.1") || spinnerItem2.equals("v1.2")
-                                            || spinnerItem2.equals("v1.3") || spinnerItem2.equals("")) {
-                                        afh.setEnabled(false);
-                                        gdrive.setEnabled(false);
+                                            || spinnerItem2.equals("v1.3")) {
+                                        spinner3.setEnabled(false);
                                     }
                                 }
                             }
