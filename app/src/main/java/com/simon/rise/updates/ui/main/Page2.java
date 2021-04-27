@@ -4,13 +4,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.R;
+import com.simon.rise.updates.SystemProperties.SystemProperties;
+import com.simon.rise.updates.json.JSONParser;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -20,6 +26,23 @@ public class Page2 extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private PageViewModel pageViewModel;
+
+    private View fragmentView;
+
+    /* Create instances of HTTPConnecting and
+    pass a new instance of JSONParser to it */
+    private final JSONParser parser = new JSONParser();
+    private final JSONParser parser2 = new JSONParser();
+    private final HTTPConnecting connect = new HTTPConnecting(parser);
+    private final HTTPConnecting connect2 = new HTTPConnecting(parser2);
+
+    private Spinner spinner1;
+
+    // URLs
+    private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
+    private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
+
+    private SystemProperties props = new SystemProperties();
 
     public static Page2 newInstance(int index) {
         Page2 fragment = new Page2();
@@ -45,6 +68,63 @@ public class Page2 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_page2, container, false);
+
+        this.fragmentView = root;
+
+        getVersions();
+        initializeSpinners();
+
+        checkInstalled();
+
         return root;
+    }
+
+    public void getVersions() {
+        // Get kernel types from github JSON
+        connect.connectURL("rise-q", fragmentView, versionsURL);
+    }
+
+    public void initializeSpinners() {
+        // Create a dropdown-list for AOSP Q (default), Treble Q and AOSP Pie
+        spinner1 = fragmentView.findViewById(R.id.spinner1_page2);
+
+        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter1.add("");
+
+        spinner1.setAdapter(adapter1);
+    }
+
+    public void checkInstalled() {
+        TextView tv = fragmentView.findViewById(R.id.textView_version_page2);
+
+        String variable = "v";
+        String line = props.read("ro.build.display.id");
+        ImageView image = fragmentView.findViewById(R.id.imageView1_page2);
+
+        int lineIndex = line.indexOf(variable);
+
+        String str = line.substring(lineIndex);
+
+        if(line.contains(variable)) {
+            if(line.contains("Rise-Q")) {
+                if(line.contains("v1 ")) {
+                    tv.setText(str.substring(0, 2));
+                }
+                else
+                {
+                    tv.setText(str.substring(0, 4));
+                }
+                image.setImageResource(R.drawable.ic_hook_icon);
+            }
+            else
+            {
+                tv.setText(R.string.notInstalled);
+                image.setImageResource(R.drawable.ic_x_icon);
+            }
+        }
     }
 }
