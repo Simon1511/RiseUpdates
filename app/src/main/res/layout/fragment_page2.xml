@@ -36,7 +36,7 @@
         app:layout_constraintGuide_percent="0.28" />
 
     <TextView
-        android:id="@+id/textView_page2"
+        android:id="@+id/textView1_page2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
@@ -123,5 +123,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_dl_page2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/download"
+        android:textSize="12sp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include layout="@layout/support_icons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
