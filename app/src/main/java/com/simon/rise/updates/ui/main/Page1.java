@@ -153,7 +153,7 @@ public class Page1 extends Fragment {
             @Override
             public void run() {
                 // Sleep as long as the itemList contains no items
-                while(parser.getItemList().size() <= 1 && parser2.getItemList().size() <= 1) {
+                while(parser.getItemList().size() <= 1 || parser2.getItemList().size() <= 1) {
                     try {
                         Thread.sleep(1000);
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
