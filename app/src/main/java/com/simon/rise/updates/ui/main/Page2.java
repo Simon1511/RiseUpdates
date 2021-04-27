@@ -84,7 +84,7 @@ public class Page2 extends Fragment {
 
     public void getVersions() {
         // Get Rise-Q versions from Github JSON
-        connect.connectURL("rise-q", fragmentView, versionsURL);
+        connect.connectURL("rise-q", fragmentView, versionsURL, "");
     }
 
     public void initializeSpinners() {

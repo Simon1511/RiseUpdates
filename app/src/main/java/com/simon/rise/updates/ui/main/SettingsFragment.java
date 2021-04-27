@@ -74,7 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         updateButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                connect.connectURL("appVersion", fragmentView, versionsURL);
+                connect.connectURL("appVersion", fragmentView, versionsURL, "");
 
                 /* Wait for our itemList to contain an item before
                 telling the user that an update exists */

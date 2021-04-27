@@ -17,7 +17,7 @@ public class JSONParser {
 
     private String toUpdate2;
 
-    public void parseJSON(String myResponse, String toUpdate, View root) {
+    public void parseJSON(String myResponse, String updateObject, String toUpdate, View root) {
         toUpdate2 = toUpdate;
 
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -29,12 +29,26 @@ public class JSONParser {
                 {
                     try {
                         JSONObject oneObject = jArray.getJSONObject(i);
-                        JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
 
-                        for(int j=0; j<jsonArray.length(); j++) {
-                            /* Add the String we got from the JSON to an
-                            Arraylist in case we need it later, e.g. for a spinner. */
-                            itemList.add(jsonArray.getString(j));
+                        if(updateObject.equals("riseKernel") || updateObject.equals("rise-q") || updateObject.equals("riseTreble")) {
+                            JSONObject jObject = oneObject.getJSONObject(updateObject);
+                            JSONArray vArray = jObject.getJSONArray(toUpdate);
+
+                            for(int j=0; j<vArray.length(); j++) {
+                                /* Add the String we got from the JSON to an
+                                Arraylist in case we need it later, e.g. for a spinner. */
+                                itemList.add(vArray.getString(j));
+                            }
+                        }
+                        else
+                        {
+                            JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
+
+                            for(int j=0; j<jsonArray.length(); j++) {
+                                /* Add the String we got from the JSON to an
+                                Arraylist in case we need it later, e.g. for a spinner. */
+                                itemList.add(jsonArray.getString(j));
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

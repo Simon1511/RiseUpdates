@@ -197,10 +197,10 @@ public class Page1 extends Fragment {
 
     public void getTypeVersion() {
         // Get kernel types from github JSON
-        connect.connectURL("kernelType", fragmentView, versionsURL);
+        connect.connectURL("kernelType", fragmentView, versionsURL, "");
 
         // Get kernel versions from github JSON
-        connect2.connectURL("riseKernel", fragmentView, versionsURL);
+        connect2.connectURL("riseKernel", fragmentView, versionsURL, "");
     }
 
     public void onClickButtons() {
@@ -296,16 +296,16 @@ public class Page1 extends Fragment {
                 if(spinner2.getSelectedItem().toString() != "") {
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
                     if(spinner1.getSelectedItem().toString().equals("Treble 10.0") && spinner2.getSelectedItem().toString().equals("v1.3")) {
-                        connect3.connectURL("v1.3T", fragmentView, downloadURL);
+                        connect3.connectURL("v1.3T", fragmentView, downloadURL, "riseKernel");
                     }
                     else
                     if(spinner2.getSelectedItem().toString().equals("v1.2") || spinner2.getSelectedItem().toString().equals("v1.1")
                             || spinner2.getSelectedItem().toString().equals("v1")) {
                         if(props.read("ro.boot.bootloader") != null) {
                             if (props.read("ro.boot.bootloader").contains("A520")) {
-                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL);
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL, "riseKernel");
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
-                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL);
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL, "riseKernel");
                             } else {
                                 afh.setEnabled(false);
                                 gdrive.setEnabled(false);
@@ -319,7 +319,7 @@ public class Page1 extends Fragment {
                     }
                     else
                     {
-                        connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL);
+                        connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL, "riseKernel");
                     }
                 }
 

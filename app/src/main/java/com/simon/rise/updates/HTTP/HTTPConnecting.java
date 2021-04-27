@@ -21,7 +21,7 @@ public class HTTPConnecting {
         this.parser = parser;
     }
 
-    public void connectURL(String toUpdate, View root, String url) {
+    public void connectURL(String toUpdate, View root, String url, String updateObject) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -37,7 +37,7 @@ public class HTTPConnecting {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String myResponse = response.body().string();
-                    parser.parseJSON(myResponse, toUpdate, root);
+                    parser.parseJSON(myResponse, updateObject, toUpdate, root);
                 }
             }
         });
