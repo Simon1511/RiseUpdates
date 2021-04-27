@@ -30,7 +30,7 @@ public class JSONParser {
                     try {
                         JSONObject oneObject = jArray.getJSONObject(i);
 
-                        if(updateObject.equals("riseKernel") || updateObject.equals("rise-q") || updateObject.equals("riseTreble")) {
+                        if(updateObject.equals("riseKernel") || updateObject.equals("rise-q") || updateObject.equals("riseTreble-q")) {
                             JSONObject jObject = oneObject.getJSONObject(updateObject);
                             JSONArray vArray = jObject.getJSONArray(toUpdate);
 

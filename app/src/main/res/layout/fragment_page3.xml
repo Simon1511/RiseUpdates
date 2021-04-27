@@ -14,8 +14,22 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2_page3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3_page3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.18" />
+
     <TextView
-        android:id="@+id/textView_page3"
+        android:id="@+id/textView1_page3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
@@ -23,5 +37,65 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_chooseVersion_page3"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/chooseVersion_text"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2_page3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_chooseDownload_page3"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/downloadMirror"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_page3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner1_page3"
+        android:layout_width="145dp"
+        android:layout_height="30dp"
+        android:background="@drawable/spinner_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2_page3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner2_page3"
+        android:layout_width="145dp"
+        android:layout_height="30dp"
+        android:background="@drawable/spinner_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3_page3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_dl_page3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/download"
+        android:textSize="12sp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include layout="@layout/support_icons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
