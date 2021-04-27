@@ -54,7 +54,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -66,7 +66,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -76,7 +76,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -86,7 +86,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -99,7 +99,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

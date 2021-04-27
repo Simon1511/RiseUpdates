@@ -68,7 +68,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -80,7 +80,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -90,7 +90,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -101,7 +101,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -128,7 +128,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -162,7 +162,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -172,7 +172,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent" />
 
     <include layout="@layout/support_icons" />
