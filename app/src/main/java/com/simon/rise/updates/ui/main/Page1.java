@@ -117,7 +117,9 @@ public class Page1 extends Fragment {
 
         checkInstalled();
 
-        alr.updateAlert(parser, parser2, getActivity());
+        if(props.read("ro.boot.bootloader").contains("A520") || props.read("ro.boot.bootloader").contains("A720")) {
+            alr.updateAlert(parser, parser2, getActivity());
+        }
 
         return root;
     }
