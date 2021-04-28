@@ -11,9 +11,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.simon.rise.updates.ui.main.AlertDialogRunnable;
 import com.simon.rise.updates.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AlertDialogRunnable alr = new AlertDialogRunnable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        alr.deviceAlert(this);
     }
 
     @Override
