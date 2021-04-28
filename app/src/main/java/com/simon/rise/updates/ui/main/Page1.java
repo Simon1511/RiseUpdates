@@ -248,12 +248,12 @@ public class Page1 extends Fragment {
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
                                 connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL, "riseKernel");
                             } else {
-                                dlButton.setEnabled(false);
+                                alr.deviceAlert(getActivity());
                             }
                         }
                         else
                         {
-                            dlButton.setEnabled(false);
+                            alr.deviceAlert(getActivity());
                         }
                     }
                     else
