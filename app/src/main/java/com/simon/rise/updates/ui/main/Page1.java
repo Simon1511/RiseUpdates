@@ -102,10 +102,10 @@ public class Page1 extends Fragment {
         parser2.getItemList().clear();
         parser3.getItemList().clear();
 
-        // Initialize AFH and GDrive download buttons
+        // Initialize download button
         dlButton = root.findViewById(R.id.button_dl_page1);
 
-        // Gray out both buttons by default
+        // Gray out download button by default
         dlButton.setEnabled(false);
 
         getTypeVersion();
@@ -161,7 +161,7 @@ public class Page1 extends Fragment {
     }
 
     public void initializeSpinners() {
-        // Create a dropdown-list for AOSP Q (default), Treble Q and AOSP Pie
+        // Create a dropdown-list for AOSP Q, Treble Q and AOSP Pie
         spinner1 = fragmentView.findViewById(R.id.spinner1_page1);
 
         ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
@@ -190,7 +190,7 @@ public class Page1 extends Fragment {
     }
 
     public void onClickSpinners() {
-        // Gray out buttons depending on type and version selected in spinners
+        // Disable spinners depending on selection
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -217,7 +217,7 @@ public class Page1 extends Fragment {
             }
         });
 
-        // Gray out buttons depending on type and version selected in spinners
+        // Disable spinners depending on selection
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -260,7 +260,8 @@ public class Page1 extends Fragment {
 
                         @Override
                         public void run() {
-                            /* Run this once in an if-clause and then in a while-loop */
+                            /* Run this once in an if-clause and then use
+                             the while-loop to wait for it */
                             if(parser3.getItemList().size() <= 1) {
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
