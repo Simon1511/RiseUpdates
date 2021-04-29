@@ -14,15 +14,28 @@
 
         <item name="android:textColor">@color/white</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
-    <style name="PositiveButtonStyle">
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Theme.RiseUpdates.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="PreferenceAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
     <style name="Theme.RiseUpdates.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
