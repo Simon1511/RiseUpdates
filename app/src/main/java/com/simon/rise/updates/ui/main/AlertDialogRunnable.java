@@ -124,8 +124,7 @@ public class AlertDialogRunnable {
         );
 
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Download", (dialog, which) -> {
-            // PLACEHOLDER
-            Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates");
+            Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates/releases/download/" + parser.getItemList().get(0) + "/RiseUpdates-" + parser.getItemList().get(0) + ".apk");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
             parser.getItemList().clear();
