@@ -262,7 +262,7 @@ public class Page1 extends Fragment {
                     else
                     if(spinner2.getSelectedItem().toString().equals("v1.2") || spinner2.getSelectedItem().toString().equals("v1.1")
                             || spinner2.getSelectedItem().toString().equals("v1")) {
-                        if(props.read("ro.boot.bootloader") != null) {
+                        if(props.read("ro.boot.bootloader") != "") {
                             if (props.read("ro.boot.bootloader").contains("A520")) {
                                 Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
                                 connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL, "riseKernel");
