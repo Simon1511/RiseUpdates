@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         alr.deviceAlert(this);
+
+        startService(new Intent(this, UpdateService.class));
     }
 
     @Override
