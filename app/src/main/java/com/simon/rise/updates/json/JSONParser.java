@@ -2,6 +2,7 @@ package com.simon.rise.updates.json;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -13,6 +14,8 @@ import java.util.List;
 
 public class JSONParser {
 
+    private static final String TAG = "JSONParser";
+
     private List<String> itemList = new ArrayList<>();
 
     private String toUpdate2;
@@ -20,18 +23,27 @@ public class JSONParser {
     public void parseJSON(String myResponse, String updateObject, String toUpdate, View root) {
         toUpdate2 = toUpdate;
 
+        Log.i(TAG, "parseJSON: Trying to get " + toUpdate);
+
         new Handler(Looper.getMainLooper()).post(() -> {
             JSONArray jArray;
             try {
+                Log.d(TAG, "parseJSON: Trying to parse first JSON Array");
                 jArray = new JSONArray(myResponse);
 
                 for (int i=0; i < jArray.length(); i++)
                 {
                     try {
+                        Log.d(TAG, "parseJSON: Trying to parse first JSON Object");
                         JSONObject oneObject = jArray.getJSONObject(i);
 
                         if(updateObject.equals("riseKernel") || updateObject.equals("rise-q") || updateObject.equals("riseTreble-q")) {
+                            Log.i(TAG, "parseJSON: Requesting download links");
+
+                            Log.d(TAG, "parseJSON: Trying to parse second JSON Object");
                             JSONObject jObject = oneObject.getJSONObject(updateObject);
+
+                            Log.d(TAG, "parseJSON: Trying to parse second JSON Array");
                             JSONArray vArray = jObject.getJSONArray(toUpdate);
 
                             for(int j=0; j<vArray.length(); j++) {
@@ -42,6 +54,9 @@ public class JSONParser {
                         }
                         else
                         {
+                            Log.i(TAG, "parseJSON: Requesting versions");
+
+                            Log.d(TAG, "parseJSON: Trying to parse second JSON Array");
                             JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
 
                             for(int j=0; j<jsonArray.length(); j++) {
@@ -51,10 +66,12 @@ public class JSONParser {
                             }
                         }
                     } catch (JSONException e) {
+                        Log.e(TAG, "parseJSON: Error parsing first JSON Object");
                         e.printStackTrace();
                     }
                 }
             } catch (JSONException e) {
+                Log.e(TAG, "parseJSON: Error parsing first JSON Array");
                 e.printStackTrace();
             }
         });

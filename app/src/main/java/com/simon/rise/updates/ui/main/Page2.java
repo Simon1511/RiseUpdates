@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.simon.rise.updates.json.JSONParser;
  * A placeholder fragment containing a simple view.
  */
 public class Page2 extends Fragment {
+
+    private static final String TAG = "Page2";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -103,11 +106,15 @@ public class Page2 extends Fragment {
     }
 
     public void getVersions() {
+        Log.i(TAG, "getVersions: Connecting to GitHub");
+
         // Get Rise-Q versions from Github JSON
         connect.connectURL("rise-q", fragmentView, versionsURL, "");
     }
 
     public void initializeSpinners() {
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 1");
+
         // Create a dropdown-list for versions
         spinner1 = fragmentView.findViewById(R.id.spinner1_page2);
 
@@ -120,6 +127,8 @@ public class Page2 extends Fragment {
 
         spinner1.setAdapter(adapter1);
 
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 2");
+
         // Create a dropdown-list for download mirrors
         spinner2 = fragmentView.findViewById(R.id.spinner2_page2);
     }
@@ -129,11 +138,16 @@ public class Page2 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner1.getSelectedItem().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
                 }
 
                 if(spinner1.getSelectedItem() != "") {
+                    Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
+
+                    Log.i(TAG, "onItemSelected Spinner1: Connecting to GitHub");
+
                     // Get Rise-Q downloads from Github JSON
                     connect2.connectURL(spinner1.getSelectedItem().toString(), fragmentView, downloadURL, "rise-q");
                     Runnable run = new Runnable() {
@@ -167,18 +181,22 @@ public class Page2 extends Fragment {
                                         dlAdapter.add("");
                                         for(int i = 0; i<parser2.getItemList().size(); i++) {
                                             if (parser2.getItemList().get(i).toString().contains("mega")) {
+                                                Log.i(TAG, "Spinner2: Add MEGA as download mirror");
                                                 dlAdapter.add("MEGA");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("google")) {
+                                                Log.i(TAG, "Spinner2: Add Google Drive as download mirror");
                                                 dlAdapter.add("Google Drive");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("1drv")) {
+                                                Log.i(TAG, "Spinner2: Add OneDrive as download mirror");
                                                 dlAdapter.add("OneDrive");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("androidfilehost")) {
+                                                Log.i(TAG, "Spinner2: Add Androidfilehost as download mirror");
                                                 dlAdapter.add("Androidfilehost");
                                             }
                                         }
@@ -207,10 +225,14 @@ public class Page2 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner2.getSelectedItem().toString() != "") {
+                    Log.i(TAG, "onItemSelected Spinner2: " + spinner2.getSelectedItem().toString());
+                    Log.i(TAG, "setButtons: Enabled");
                     dlButton.setEnabled(true);
                 }
                 else
                 {
+                    Log.i(TAG, "onItemSelected Spinner2: Empty");
+                    Log.i(TAG, "setButtons: Disabled");
                     dlButton.setEnabled(false);
                 }
             }
@@ -239,12 +261,16 @@ public class Page2 extends Fragment {
                     dlURL = parser2.getItemList().get(2).toString();
                 }
 
+                Log.i(TAG, "download mirror: " + spinner2.getSelectedItem().toString());
+
                 if (dlURL != "") {
                     try {
                         Uri uri = Uri.parse(dlURL);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        Log.i(TAG, "onClick: Redirect to webbrowser");
                         startActivity(intent);
                     } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "onClick: Error opening download URL");
                         e.printStackTrace();
                     }
                 }
@@ -266,16 +292,19 @@ public class Page2 extends Fragment {
         if(line.contains(variable)) {
             if(line.contains("Rise-Q")) {
                 if(line.contains("v1 ")) {
+                    Log.i(TAG, "checkInstalled: Rise-Q v1.0 installed");
                     tv.setText(str.substring(0, 2));
                 }
                 else
                 {
+                    Log.i(TAG, "checkInstalled: Rise-Q " + str.substring(0, 4) + " installed");
                     tv.setText(str.substring(0, 4));
                 }
                 image.setImageResource(R.drawable.ic_hook_icon);
             }
             else
             {
+                Log.e(TAG, "checkInstalled: Rise-Q is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }

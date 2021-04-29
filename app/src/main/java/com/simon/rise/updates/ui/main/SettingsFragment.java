@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.simon.rise.updates.R;
 import com.simon.rise.updates.json.JSONParser;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    private static final String TAG = "SettingsFragment";
 
     private JSONParser parser;
     private HTTPConnecting connect;
@@ -55,10 +58,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         @Override
                         public void run() {
                             if(parser.getItemList().get(0).toString().equals("v" + BuildConfig.VERSION_NAME)) {
+                                Log.i(TAG, "checkUpdate: No update available");
                                 Toast.makeText(getActivity(), "No update available", Toast.LENGTH_LONG).show();
                             }
                             else
                             {
+                                Log.i(TAG, "checkUpdate: Update found, opening webbrowser");
+
                                 // Need to complete this later with "release" URL
                                 Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -74,6 +80,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         updateButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                Log.i(TAG, "onPreferenceClick: Connecting to GitHub");
                 connect.connectURL("appVersion", fragmentView, versionsURL, "");
 
                 /* Wait for our itemList to contain an item before
@@ -89,6 +96,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         easterEgg.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                Log.i(TAG, "onPreferenceClick: About button");
                 Toast.makeText(getActivity(), "( ͡° ͜ʖ ͡°)", Toast.LENGTH_SHORT).show();
                 return true;
             }

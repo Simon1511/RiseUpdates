@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import java.io.InputStreamReader;
  * A placeholder fragment containing a simple view.
  */
 public class Page1 extends Fragment {
+
+    private static final String TAG = "Page1";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -125,6 +128,8 @@ public class Page1 extends Fragment {
     }
 
     public void getTypeVersion() {
+        Log.i(TAG, "getTypeVersion: Connecting to GitHub");
+
         // Get kernel types from github JSON
         connect.connectURL("kernelType", fragmentView, versionsURL, "");
 
@@ -150,12 +155,16 @@ public class Page1 extends Fragment {
                     dlURL = parser3.getItemList().get(2).toString();
                 }
 
+                Log.i(TAG, "download mirror: " + spinner3.getSelectedItem().toString());
+
                 if (dlURL != "") {
                     try {
                         Uri uri = Uri.parse(dlURL);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        Log.i(TAG, "onClick: Redirect to webbrowser");
                         startActivity(intent);
                     } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "onClick: Error opening download URL");
                         e.printStackTrace();
                     }
                 }
@@ -164,6 +173,8 @@ public class Page1 extends Fragment {
     }
 
     public void initializeSpinners() {
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 1");
+
         // Create a dropdown-list for AOSP Q, Treble Q and AOSP Pie
         spinner1 = fragmentView.findViewById(R.id.spinner1_page1);
 
@@ -175,6 +186,8 @@ public class Page1 extends Fragment {
         adapter1.add("");
 
         spinner1.setAdapter(adapter1);
+
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 2");
 
         // Create a dropdown-list for all versions of the kernel
         spinner2 = fragmentView.findViewById(R.id.spinner2_page1);
@@ -188,6 +201,7 @@ public class Page1 extends Fragment {
 
         spinner2.setAdapter(adapter2);
 
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 3");
         // Create a dropdown-list for download mirrors
         spinner3 = fragmentView.findViewById(R.id.spinner3_page1);
     }
@@ -200,12 +214,14 @@ public class Page1 extends Fragment {
                 setButtons();
 
                 if(spinner1.getSelectedItem().toString().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
                     spinner3.setEnabled(false);
                 }
                 else
                 if(spinner1.getSelectedItem().toString() != parser.getItemList().toString()) {
+                    Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
                     spinner2.setSelection(0);
                     spinner2.setEnabled(true);
                 }
@@ -229,14 +245,18 @@ public class Page1 extends Fragment {
                 setButtons();
 
                 if(spinner2.getSelectedItem().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner2: Empty");
                     spinner3.setSelection(0);
                     spinner3.setEnabled(false);
                 }
 
                 // Get download links for whatever is selected in the spinner
                 if(spinner2.getSelectedItem().toString() != "") {
+                    Log.i(TAG, "onItemSelected: " + spinner2.getSelectedItem().toString());
+
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
                     if(spinner1.getSelectedItem().toString().equals("Treble 10.0") && spinner2.getSelectedItem().toString().equals("v1.3")) {
+                        Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
                         connect3.connectURL("v1.3T", fragmentView, downloadURL, "riseKernel");
                     }
                     else
@@ -244,8 +264,10 @@ public class Page1 extends Fragment {
                             || spinner2.getSelectedItem().toString().equals("v1")) {
                         if(props.read("ro.boot.bootloader") != null) {
                             if (props.read("ro.boot.bootloader").contains("A520")) {
+                                Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
                                 connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL, "riseKernel");
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
+                                Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
                                 connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL, "riseKernel");
                             } else {
                                 alr.deviceAlert(getActivity());
@@ -258,6 +280,7 @@ public class Page1 extends Fragment {
                     }
                     else
                     {
+                        Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
                         connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL, "riseKernel");
                     }
 
@@ -293,18 +316,22 @@ public class Page1 extends Fragment {
                                         dlAdapter.add("");
                                         for(int i = 0; i<parser3.getItemList().size(); i++) {
                                             if (parser3.getItemList().get(i).toString().contains("mega")) {
+                                                Log.i(TAG, "Spinner3: Add MEGA as download mirror");
                                                 dlAdapter.add("MEGA");
                                             }
 
                                             if (parser3.getItemList().get(i).toString().contains("google")) {
+                                                Log.i(TAG, "Spinner3: Add Google Drive as download mirror");
                                                 dlAdapter.add("Google Drive");
                                             }
 
                                             if (parser3.getItemList().get(i).toString().contains("1drv")) {
+                                                Log.i(TAG, "Spinner3: Add OneDrive as download mirror");
                                                 dlAdapter.add("OneDrive");
                                             }
 
                                             if (parser3.getItemList().get(i).toString().contains("androidfilehost")) {
+                                                Log.i(TAG, "Spinner3: Add Androidfilehost as download mirror");
                                                 dlAdapter.add("Androidfilehost");
                                             }
                                         }
@@ -336,6 +363,13 @@ public class Page1 extends Fragment {
         spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spinner3.getSelectedItem().toString().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner3: Empty");
+                }
+                else
+                {
+                    Log.i(TAG, "onItemSelected Spinner3: " + spinner3.getSelectedItem().toString());
+                }
                 setButtons();
             }
 
@@ -350,19 +384,24 @@ public class Page1 extends Fragment {
         String spinnerItem2 = spinner2.getSelectedItem().toString();
 
         if(spinnerItem1.equals("") || spinnerItem2.equals("")) {
+            Log.i(TAG, "setButtons: Disabled");
             dlButton.setEnabled(false);
         }
 
         if(spinner3.getSelectedItem() == null || spinner3.getSelectedItem().toString().equals("")) {
+            Log.i(TAG, "setButtons: Disabled");
             dlButton.setEnabled(false);
         }
         else
         if(spinner3.getSelectedItem().toString() != "") {
+            Log.i(TAG, "setButtons: Enabled");
             dlButton.setEnabled(true);
         }
     }
 
     public void setSpinnerItems() {
+        Log.i(TAG, "setSpinnerItems: Setup Spinner2 selections");
+
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
             for (int i = 0; i<parser2.getItemList().size(); i++) {
                 if(parser2.getItemList().get(i).toString().equals("v3 (Pie)"))  {
@@ -538,10 +577,12 @@ public class Page1 extends Fragment {
             if(line.contains(variable)) {
                 if(line.contains("riseKernel") || line.contains("ProjectRise")) {
                     if(line.substring(lineIndex).equals("v4")) {
+                        Log.i(TAG, "checkInstalled: riseKernel v1.4-1 installed");
                         tv.setText("v1.4-1");
                     }
                     else
                     {
+                        Log.i(TAG, "checkInstalled: riseKernel " + line.substring(lineIndex) + " installed");
                         tv.setText(line.substring(lineIndex));
                     }
                     image.setImageResource(R.drawable.ic_hook_icon);
@@ -549,11 +590,13 @@ public class Page1 extends Fragment {
             }
             else
             {
+                Log.e(TAG, "checkInstalled: riseKernel is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }
         }
         catch(IOException e)  {
+            Log.e(TAG, "checkInstalled: Error reading riseKernel version");
             e.printStackTrace();
         }
     }

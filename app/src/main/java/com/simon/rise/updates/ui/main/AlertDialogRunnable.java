@@ -38,6 +38,8 @@ public class AlertDialogRunnable {
             }
         });
 
+        Log.i(TAG, "updateAlert: Fetch data from GitHub");
+
         alertDialog.show();
 
         alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
@@ -57,6 +59,7 @@ public class AlertDialogRunnable {
                                 /* Check if the user is connected to the internet and
                                  if not, show an exit button instead of the progressbar */
                                 if(!isConnected(context)) {
+                                    Log.i(TAG, "updateAlert: No internet connection found, forcing user to exit");
                                     alertDialog.setTitle("NO INTERNET CONNECTION");
                                     pBar.setVisibility(View.GONE);
                                     alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setVisibility(View.VISIBLE);
@@ -73,6 +76,7 @@ public class AlertDialogRunnable {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+                            Log.i(TAG, "updateAlert: Data fetched successfully");
                             alertDialog.dismiss();
                         }
                     });

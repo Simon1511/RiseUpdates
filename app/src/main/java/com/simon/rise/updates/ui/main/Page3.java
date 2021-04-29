@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.simon.rise.updates.json.JSONParser;
  * A placeholder fragment containing a simple view.
  */
 public class Page3 extends Fragment {
+
+    public static final String TAG = "Page3";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -99,11 +102,15 @@ public class Page3 extends Fragment {
     }
 
     public void getVersions() {
+        Log.i(TAG, "getVersions: Connecting to GitHub");
+
         // Get riseTreble versions from Github JSON
         connect.connectURL("riseTreble-q", fragmentView, versionsURL, "");
     }
 
     public void initializeSpinners() {
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 1");
+
         // Create a dropdown-list for versions
         spinner1 = fragmentView.findViewById(R.id.spinner1_page3);
 
@@ -115,6 +122,8 @@ public class Page3 extends Fragment {
         adapter1.add("");
 
         spinner1.setAdapter(adapter1);
+
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 2");
 
         // Create a dropdown-list for download mirrors
         spinner2 = fragmentView.findViewById(R.id.spinner2_page3);
@@ -130,6 +139,10 @@ public class Page3 extends Fragment {
                 }
 
                 if(spinner1.getSelectedItem() != "") {
+                    Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
+
+                    Log.i(TAG, "onItemSelected Spinner1: Connecting to GitHub");
+
                     // Get riseTreble downloads from Github JSON
                     connect2.connectURL(spinner1.getSelectedItem().toString(), fragmentView, downloadURL, "riseTreble-q");
                     Runnable run = new Runnable() {
@@ -163,18 +176,22 @@ public class Page3 extends Fragment {
                                         dlAdapter.add("");
                                         for(int i = 0; i<parser2.getItemList().size(); i++) {
                                             if (parser2.getItemList().get(i).toString().contains("mega")) {
+                                                Log.i(TAG, "Spinner2: Add MEGA as download mirror");
                                                 dlAdapter.add("MEGA");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("google")) {
+                                                Log.i(TAG, "Spinner2: Add Google Drive as download mirror");
                                                 dlAdapter.add("Google Drive");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("1drv")) {
+                                                Log.i(TAG, "Spinner2: Add OneDrive as download mirror");
                                                 dlAdapter.add("OneDrive");
                                             }
 
                                             if (parser2.getItemList().get(i).toString().contains("androidfilehost")) {
+                                                Log.i(TAG, "Spinner2: Add Androidfilehost as download mirror");
                                                 dlAdapter.add("Androidfilehost");
                                             }
                                         }
@@ -203,10 +220,14 @@ public class Page3 extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner2.getSelectedItem().toString() != "") {
+                    Log.i(TAG, "onItemSelected Spinner2: " + spinner2.getSelectedItem().toString());
+                    Log.i(TAG, "setButtons: Enabled");
                     dlButton.setEnabled(true);
                 }
                 else
                 {
+                    Log.i(TAG, "onItemSelected Spinner2: Empty");
+                    Log.i(TAG, "setButtons: Disabled");
                     dlButton.setEnabled(false);
                 }
             }
@@ -235,12 +256,16 @@ public class Page3 extends Fragment {
                     dlURL = parser2.getItemList().get(2).toString();
                 }
 
+                Log.i(TAG, "download mirror: " + spinner2.getSelectedItem().toString());
+
                 if (dlURL != "") {
                     try {
                         Uri uri = Uri.parse(dlURL);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        Log.i(TAG, "onClick: Redirect to webbrowser");
                         startActivity(intent);
                     } catch (IndexOutOfBoundsException e) {
+                        Log.e(TAG, "onClick: Error opening download URL");
                         e.printStackTrace();
                     }
                 }

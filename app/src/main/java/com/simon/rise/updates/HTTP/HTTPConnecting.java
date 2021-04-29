@@ -1,5 +1,6 @@
 package com.simon.rise.updates.HTTP;
 
+import android.util.Log;
 import android.view.View;
 import com.simon.rise.updates.json.JSONParser;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,8 @@ import okhttp3.Response;
 
 public class HTTPConnecting {
 
+    private static final String TAG = "HTTPConnecting";
+
     // We use the same instance of JSONParser in 3 classes
     private final JSONParser parser;
 
@@ -23,6 +26,8 @@ public class HTTPConnecting {
 
     public void connectURL(String toUpdate, View root, String url, String updateObject) {
 
+        Log.i(TAG, "connectURL: Create HTTP request");
+
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder().url(url).build();
@@ -30,12 +35,14 @@ public class HTTPConnecting {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e(TAG, "onFailure: HTTP request failed");
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    Log.i(TAG, "onResponse: HTTP request successful");
                     String myResponse = response.body().string();
                     parser.parseJSON(myResponse, updateObject, toUpdate, root);
                 }
