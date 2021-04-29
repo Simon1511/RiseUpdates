@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -41,12 +40,12 @@ public class UpdateService extends Service {
 
     @Override
     public void onCreate() {
-        Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
+        Log.i(TAG, "onCreate: Service created");
 
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
-                Toast.makeText(context, "Service is still running", Toast.LENGTH_LONG).show();
+                Log.i(TAG, "onCreate: Service is running");
                 checkAppUpdate();
                 // Check for updates once per day
                 handler.postDelayed(runnable, 86400000);
@@ -59,12 +58,12 @@ public class UpdateService extends Service {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
+        Log.i(TAG, "onDestroy: Service was stopped!");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "Service started by user.", Toast.LENGTH_LONG).show();
+        Log.i(TAG, "onStartCommand: Service started!");
         return START_STICKY;
     }
 
@@ -73,6 +72,8 @@ public class UpdateService extends Service {
         HTTPConnecting connect = new HTTPConnecting(parser);
 
         parser.getItemList().clear();
+
+        Log.i(TAG, "checkAppUpdate: Connect to GitHub");
 
         connect.connectURL("appVersion", versionsURL, "");
 
