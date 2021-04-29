@@ -1,5 +1,6 @@
 package com.simon.rise.updates.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,20 +38,18 @@ public class Page1 extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private PageViewModel pageViewModel;
-
     /* Make the View object created in onCreateView
     available to the whole class */
     protected View fragmentView;
 
     /* Create instances of HTTPConnecting and
     pass a new instance of JSONParser to it */
-    private JSONParser parser = new JSONParser();
-    private JSONParser parser2 = new JSONParser();
-    private JSONParser parser3 = new JSONParser();
-    private HTTPConnecting connect = new HTTPConnecting(parser);
-    private HTTPConnecting connect2 = new HTTPConnecting(parser2);
-    private HTTPConnecting connect3 = new HTTPConnecting(parser3);
+    private final JSONParser parser = new JSONParser();
+    private final JSONParser parser2 = new JSONParser();
+    private final JSONParser parser3 = new JSONParser();
+    private final HTTPConnecting connect = new HTTPConnecting(parser);
+    private final HTTPConnecting connect2 = new HTTPConnecting(parser2);
+    private final HTTPConnecting connect3 = new HTTPConnecting(parser3);
 
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
@@ -63,13 +62,11 @@ public class Page1 extends Fragment {
     private Spinner spinner2;
     private Spinner spinner3;
 
-    private SystemProperties props = new SystemProperties();
-
-    private SupportButtons spB;
+    private final SystemProperties props = new SystemProperties();
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
-    private ArrayAdapter<CharSequence> adapter2;
+    private ArrayAdapter<String> adapter2;
 
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
@@ -82,7 +79,7 @@ public class Page1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
+        PageViewModel pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
@@ -99,7 +96,7 @@ public class Page1 extends Fragment {
 
         this.fragmentView = root;
 
-        spB = new SupportButtons(getContext());
+        SupportButtons spB = new SupportButtons(getContext());
         spB.supportButtons(fragmentView, xdaURL);
 
         parser.getItemList().clear();
@@ -131,42 +128,39 @@ public class Page1 extends Fragment {
         Log.i(TAG, "getTypeVersion: Connecting to GitHub");
 
         // Get kernel types from github JSON
-        connect.connectURL("kernelType", fragmentView, versionsURL, "");
+        connect.connectURL("kernelType", versionsURL, "");
 
         // Get kernel versions from github JSON
-        connect2.connectURL("riseKernel", fragmentView, versionsURL, "");
+        connect2.connectURL("riseKernel", versionsURL, "");
     }
 
     public void onClickButtons() {
-        dlButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dlURL = "";
+        dlButton.setOnClickListener(v -> {
+            String dlURL = "";
 
-                if (spinner3.getSelectedItem().equals("Google Drive")) {
-                    dlURL = parser3.getItemList().get(0).toString();
-                }
-                else
-                if (spinner3.getSelectedItem().equals("MEGA") || spinner3.getSelectedItem().equals("OneDrive")) {
-                    dlURL = parser2.getItemList().get(1).toString();
-                }
-                else
-                if (spinner3.getSelectedItem().equals("Androidfilehost")) {
-                    dlURL = parser3.getItemList().get(2).toString();
-                }
+            if (spinner3.getSelectedItem().equals("Google Drive")) {
+                dlURL = parser3.getItemList().get(0);
+            }
+            else
+            if (spinner3.getSelectedItem().equals("MEGA") || spinner3.getSelectedItem().equals("OneDrive")) {
+                dlURL = parser2.getItemList().get(1);
+            }
+            else
+            if (spinner3.getSelectedItem().equals("Androidfilehost")) {
+                dlURL = parser3.getItemList().get(2);
+            }
 
-                Log.i(TAG, "download mirror: " + spinner3.getSelectedItem().toString());
+            Log.i(TAG, "download mirror: " + spinner3.getSelectedItem().toString());
 
-                if (dlURL != "") {
-                    try {
-                        Uri uri = Uri.parse(dlURL);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        Log.i(TAG, "onClick: Redirect to webbrowser");
-                        startActivity(intent);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e(TAG, "onClick: Error opening download URL");
-                        e.printStackTrace();
-                    }
+            if (!dlURL.equals("")) {
+                try {
+                    Uri uri = Uri.parse(dlURL);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    Log.i(TAG, "onClick: Redirect to webbrowser");
+                    startActivity(intent);
+                } catch (IndexOutOfBoundsException e) {
+                    Log.e(TAG, "onClick: Error opening download URL");
+                    e.printStackTrace();
                 }
             }
         });
@@ -178,7 +172,7 @@ public class Page1 extends Fragment {
         // Create a dropdown-list for AOSP Q, Treble Q and AOSP Pie
         spinner1 = fragmentView.findViewById(R.id.spinner1_page1);
 
-        ArrayAdapter<CharSequence> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         /* Show this as initial item in our spinner.
@@ -218,19 +212,16 @@ public class Page1 extends Fragment {
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
                     spinner3.setEnabled(false);
+                    parser3.getItemList().clear();
                 }
                 else
-                if(spinner1.getSelectedItem().toString() != parser.getItemList().toString()) {
+                {
                     Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
                     spinner2.setSelection(0);
                     spinner2.setEnabled(true);
                 }
 
                 setSpinnerItems();
-
-                if(spinner1.getSelectedItem().toString().equals("")) {
-                    parser3.getItemList().clear();
-                }
             }
 
             @Override
@@ -251,24 +242,24 @@ public class Page1 extends Fragment {
                 }
 
                 // Get download links for whatever is selected in the spinner
-                if(spinner2.getSelectedItem().toString() != "") {
+                if(!spinner2.getSelectedItem().toString().equals("")) {
                     Log.i(TAG, "onItemSelected: " + spinner2.getSelectedItem().toString());
 
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)
                     if(spinner1.getSelectedItem().toString().equals("Treble 10.0") && spinner2.getSelectedItem().toString().equals("v1.3")) {
                         Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
-                        connect3.connectURL("v1.3T", fragmentView, downloadURL, "riseKernel");
+                        connect3.connectURL("v1.3T", downloadURL, "riseKernel");
                     }
                     else
                     if(spinner2.getSelectedItem().toString().equals("v1.2") || spinner2.getSelectedItem().toString().equals("v1.1")
                             || spinner2.getSelectedItem().toString().equals("v1")) {
-                        if(props.read("ro.boot.bootloader") != "") {
+                        if(!props.read("ro.boot.bootloader").equals("")) {
                             if (props.read("ro.boot.bootloader").contains("A520")) {
                                 Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
-                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", fragmentView, downloadURL, "riseKernel");
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a5", downloadURL, "riseKernel");
                             } else if (props.read("ro.boot.bootloader").contains("A720")) {
                                 Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
-                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", fragmentView, downloadURL, "riseKernel");
+                                connect3.connectURL(spinner2.getSelectedItem().toString() + "_a7", downloadURL, "riseKernel");
                             } else {
                                 alr.deviceAlert(getActivity());
                             }
@@ -281,65 +272,54 @@ public class Page1 extends Fragment {
                     else
                     {
                         Log.i(TAG, "onItemSelected Spinner2: Connecting to GitHub");
-                        connect3.connectURL(spinner2.getSelectedItem().toString(), fragmentView, downloadURL, "riseKernel");
+                        connect3.connectURL(spinner2.getSelectedItem().toString(), downloadURL, "riseKernel");
                     }
 
-                    Runnable run = new Runnable() {
+                    Runnable run = () -> {
+                        /* Run this once in an if-clause and then use
+                         the while-loop to wait for it */
+                        if(parser3.getItemList().size() <= 1) {
+                            new Handler(Looper.getMainLooper()).post(() ->
+                                    alr.updateAlert(parser2, parser3, getActivity()));
+                        }
 
-                        @Override
-                        public void run() {
-                            /* Run this once in an if-clause and then use
-                             the while-loop to wait for it */
-                            if(parser3.getItemList().size() <= 1) {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        alr.updateAlert(parser2, parser3, getActivity());
-                                    }
-                                });
+                        while(parser3.getItemList().size() <= 1) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
+                        }
 
-                            while(parser3.getItemList().size() <= 1) {
-                                try {
-                                    Thread.sleep(500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                        if(parser3.getItemList().size() > 1) {
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+                                dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                dlAdapter.add("");
+                                for(int i = 0; i<parser3.getItemList().size(); i++) {
+                                    if (parser3.getItemList().get(i).contains("mega")) {
+                                        Log.i(TAG, "Spinner3: Add MEGA as download mirror");
+                                        dlAdapter.add("MEGA");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("google")) {
+                                        Log.i(TAG, "Spinner3: Add Google Drive as download mirror");
+                                        dlAdapter.add("Google Drive");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("1drv")) {
+                                        Log.i(TAG, "Spinner3: Add OneDrive as download mirror");
+                                        dlAdapter.add("OneDrive");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("androidfilehost")) {
+                                        Log.i(TAG, "Spinner3: Add Androidfilehost as download mirror");
+                                        dlAdapter.add("Androidfilehost");
+                                    }
                                 }
-                            }
-
-                            if(parser3.getItemList().size() > 1) {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
-                                        dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        dlAdapter.add("");
-                                        for(int i = 0; i<parser3.getItemList().size(); i++) {
-                                            if (parser3.getItemList().get(i).toString().contains("mega")) {
-                                                Log.i(TAG, "Spinner3: Add MEGA as download mirror");
-                                                dlAdapter.add("MEGA");
-                                            }
-
-                                            if (parser3.getItemList().get(i).toString().contains("google")) {
-                                                Log.i(TAG, "Spinner3: Add Google Drive as download mirror");
-                                                dlAdapter.add("Google Drive");
-                                            }
-
-                                            if (parser3.getItemList().get(i).toString().contains("1drv")) {
-                                                Log.i(TAG, "Spinner3: Add OneDrive as download mirror");
-                                                dlAdapter.add("OneDrive");
-                                            }
-
-                                            if (parser3.getItemList().get(i).toString().contains("androidfilehost")) {
-                                                Log.i(TAG, "Spinner3: Add Androidfilehost as download mirror");
-                                                dlAdapter.add("Androidfilehost");
-                                            }
-                                        }
-                                        spinner3.setAdapter(dlAdapter);
-                                        spinner3.setEnabled(true);
-                                    }
-                                });
-                            }
+                                spinner3.setAdapter(dlAdapter);
+                                spinner3.setEnabled(true);
+                            });
                         }
                     };
                     Thread t = new Thread(run);
@@ -348,7 +328,7 @@ public class Page1 extends Fragment {
 
                 /* Check if the selection changed and if so, clear
                 our ArrayList */
-                if(spinner2.getSelectedItem().toString() != parser3.getToUpdate()) {
+                if(!spinner2.getSelectedItem().toString().equals(parser3.getToUpdate())) {
                     parser3.getItemList().clear();
                 }
 
@@ -393,7 +373,7 @@ public class Page1 extends Fragment {
             dlButton.setEnabled(false);
         }
         else
-        if(spinner3.getSelectedItem().toString() != "") {
+        if(!spinner3.getSelectedItem().toString().equals("")) {
             Log.i(TAG, "setButtons: Enabled");
             dlButton.setEnabled(true);
         }
@@ -404,7 +384,7 @@ public class Page1 extends Fragment {
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v3 (Pie)"))  {
+                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
                     parser2.getItemList().remove(i);
                 }
             }
@@ -440,25 +420,25 @@ public class Page1 extends Fragment {
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v3 (Pie)"))  {
+                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1"))  {
+                if(parser2.getItemList().get(i).equals("v1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.1"))  {
+                if(parser2.getItemList().get(i).equals("v1.1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.2"))  {
+                if(parser2.getItemList().get(i).equals("v1.2"))  {
                     parser2.getItemList().remove(i);
                 }
             }
@@ -478,43 +458,43 @@ public class Page1 extends Fragment {
 
         if(spinner1.getSelectedItem().toString().equals("OneUI 10.0")) {
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v3 (Pie)"))  {
+                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1"))  {
+                if(parser2.getItemList().get(i).equals("v1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.1"))  {
+                if(parser2.getItemList().get(i).equals("v1.1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.2"))  {
+                if(parser2.getItemList().get(i).equals("v1.2"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.3"))  {
+                if(parser2.getItemList().get(i).equals("v1.3"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.4"))  {
+                if(parser2.getItemList().get(i).equals("v1.4"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.4-1"))  {
+                if(parser2.getItemList().get(i).equals("v1.4-1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
@@ -522,25 +502,25 @@ public class Page1 extends Fragment {
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1"))  {
+                if(parser2.getItemList().get(i).equals("v1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.1"))  {
+                if(parser2.getItemList().get(i).equals("v1.1"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.2"))  {
+                if(parser2.getItemList().get(i).equals("v1.2"))  {
                     parser2.getItemList().remove(i);
                 }
             }
 
             for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).toString().equals("v1.3"))  {
+                if(parser2.getItemList().get(i).equals("v1.3"))  {
                     parser2.getItemList().remove(i);
                 }
             }
@@ -562,6 +542,7 @@ public class Page1 extends Fragment {
         adapter2.notifyDataSetChanged();
     }
 
+    @SuppressLint("SetTextI18n")
     public void checkInstalled() {
         try {
             TextView tv = fragmentView.findViewById(R.id.textView_version_page1);

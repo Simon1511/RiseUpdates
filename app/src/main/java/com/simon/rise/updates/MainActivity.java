@@ -16,7 +16,7 @@ import com.simon.rise.updates.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AlertDialogRunnable alr = new AlertDialogRunnable();
+    private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

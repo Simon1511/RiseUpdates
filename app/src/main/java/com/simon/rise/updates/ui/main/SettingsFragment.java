@@ -29,8 +29,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private JSONParser parser;
     private HTTPConnecting connect;
 
-    private View fragmentView;
-
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
 
     @Override
@@ -40,75 +38,58 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         parser = new JSONParser();
         connect = new HTTPConnecting(parser);
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                // Sleep as long as the itemList contains no items
-                while(parser.getItemList().size() < 1) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        Runnable runnable = () -> {
+            // Sleep as long as the itemList contains no items
+            while(parser.getItemList().size() < 1) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(parser.getItemList().size() >= 1) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if(parser.getItemList().get(0).equals("v" + BuildConfig.VERSION_NAME)) {
+                        Log.i(TAG, "checkUpdate: No update available");
+                        Toast.makeText(getActivity(), "No update available", Toast.LENGTH_LONG).show();
                     }
-                }
+                    else
+                    {
+                        Log.i(TAG, "checkUpdate: Update found, opening webbrowser");
 
-                if(parser.getItemList().size() >= 1) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if(parser.getItemList().get(0).toString().equals("v" + BuildConfig.VERSION_NAME)) {
-                                Log.i(TAG, "checkUpdate: No update available");
-                                Toast.makeText(getActivity(), "No update available", Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
-                                Log.i(TAG, "checkUpdate: Update found, opening webbrowser");
-
-                                // Need to complete this later with "release" URL
-                                Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates");
-                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(intent);
-                            }
-                        }
-                    });
-                }
+                        // Need to complete this later with "release" URL
+                        Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    }
+                });
             }
         };
 
         Preference updateButton = findPreference("updateButton");
-        updateButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.i(TAG, "onPreferenceClick: Connecting to GitHub");
-                connect.connectURL("appVersion", fragmentView, versionsURL, "");
+        updateButton.setOnPreferenceClickListener(preference -> {
+            Log.i(TAG, "onPreferenceClick: Connecting to GitHub");
+            connect.connectURL("appVersion", versionsURL, "");
 
-                /* Wait for our itemList to contain an item before
-                telling the user that an update exists */
-                Thread t = new Thread(runnable);
-                t.start();
+            /* Wait for our itemList to contain an item before
+            telling the user that an update exists */
+            Thread t = new Thread(runnable);
+            t.start();
 
-                return true;
-            }
+            return true;
         });
 
         Preference easterEgg = findPreference("about");
-        easterEgg.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.i(TAG, "onPreferenceClick: About button");
-                Toast.makeText(getActivity(), "( ͡° ͜ʖ ͡°)", Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        easterEgg.setOnPreferenceClickListener(preference -> {
+            Log.i(TAG, "onPreferenceClick: About button");
+            Toast.makeText(getActivity(), "( ͡° ͜ʖ ͡°)", Toast.LENGTH_SHORT).show();
+            return true;
         });
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_page1, container, false);
-
-        this.fragmentView = view;
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }

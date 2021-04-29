@@ -1,7 +1,6 @@
 package com.simon.rise.updates.HTTP;
 
 import android.util.Log;
-import android.view.View;
 import com.simon.rise.updates.json.JSONParser;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class HTTPConnecting {
         this.parser = parser;
     }
 
-    public void connectURL(String toUpdate, View root, String url, String updateObject) {
+    public void connectURL(String toUpdate, String url, String updateObject) {
 
         Log.i(TAG, "connectURL: Create HTTP request");
 
@@ -44,7 +43,7 @@ public class HTTPConnecting {
                 if (response.isSuccessful()) {
                     Log.i(TAG, "onResponse: HTTP request successful");
                     String myResponse = response.body().string();
-                    parser.parseJSON(myResponse, updateObject, toUpdate, root);
+                    parser.parseJSON(myResponse, updateObject, toUpdate);
                 }
             }
         });

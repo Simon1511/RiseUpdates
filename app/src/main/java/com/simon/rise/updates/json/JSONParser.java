@@ -3,7 +3,6 @@ package com.simon.rise.updates.json;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +19,7 @@ public class JSONParser {
 
     private String toUpdate2;
 
-    public void parseJSON(String myResponse, String updateObject, String toUpdate, View root) {
+    public void parseJSON(String myResponse, String updateObject, String toUpdate) {
         toUpdate2 = toUpdate;
 
         Log.i(TAG, "parseJSON: Trying to get " + toUpdate);
@@ -77,7 +76,7 @@ public class JSONParser {
         });
     }
 
-    public List getItemList() {
+    public List<String> getItemList() {
         return itemList;
     }
 

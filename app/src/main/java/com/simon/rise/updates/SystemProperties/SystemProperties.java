@@ -10,8 +10,6 @@ public class SystemProperties {
 
     private static final String TAG = "SystemProperties";
 
-    private static String GETPROP_EXECUTABLE_PATH = "/system/bin/getprop";
-
     public String read(String propName) {
         Process process = null;
         BufferedReader bufferedReader = null;
@@ -19,7 +17,7 @@ public class SystemProperties {
         try {
             Log.i(TAG, "read: Get '" + propName + "'");
 
-            process = new ProcessBuilder().command(GETPROP_EXECUTABLE_PATH, propName).redirectErrorStream(true).start();
+            process = new ProcessBuilder().command("/system/bin/getprop", propName).redirectErrorStream(true).start();
             bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = bufferedReader.readLine();
             if (line == null){

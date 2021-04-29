@@ -24,9 +24,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set color to light_gray like in MainActivity
         ColorDrawable color = new ColorDrawable(ContextCompat.getColor(this, R.color.light_gray));
-        actionBar.setBackgroundDrawable(color);
 
         if (actionBar != null) {
+            actionBar.setBackgroundDrawable(color);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
