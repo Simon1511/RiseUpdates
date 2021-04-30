@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,6 +15,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.json.JSONParser;
@@ -33,6 +35,13 @@ public class UpdateService extends Service {
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
 
+    // Default to daily update search
+    private long updateInterval = 86400000;
+
+    private static final String TEXT = "updateInterval";
+
+    private String intervalString;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -40,20 +49,71 @@ public class UpdateService extends Service {
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "onCreate: Service created");
+        Log.i(TAG, "onCreate: " + TAG + " created");
+        // Load the update interval from Sharedpreferences
+        loadInterval();
+
+        // Update the interval if it was changed in settings
+        updateInterval();
 
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
-                Log.i(TAG, "onCreate: Service is running");
-                checkAppUpdate();
-                // Check for updates once per day
-                handler.postDelayed(runnable, 86400000);
+                if(updateInterval != -1) {
+                    Log.i(TAG, "onCreate: " + TAG + " is running");
+                    Log.i(TAG, "run: " + updateInterval + "ms");
+
+                    checkAppUpdate();
+
+                    handler.postDelayed(runnable, updateInterval);
+                }
+                else
+                {
+                    // Stop the service if update-interval is set to "Never"
+                    stopSelf();
+                }
             }
         };
 
         // Start the service after 15 seconds
         handler.postDelayed(runnable, 15000);
+    }
+
+    public void updateInterval() {
+        SharedPreferences.OnSharedPreferenceChangeListener listener;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                loadInterval();
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void loadInterval() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        intervalString = prefs.getString(TEXT, "Daily");
+        getInterval();
+    }
+
+    public void getInterval() {
+        if(intervalString.equals("Every 12hrs")) {
+            updateInterval = 43200000;
+        }
+        else
+        if(intervalString.equals("Daily")) {
+            updateInterval = 86400000;
+        }
+        else
+        if(intervalString.equals("Weekly")) {
+            updateInterval = 604800000;
+        }
+        else
+        if(intervalString.equals("Never")) {
+            updateInterval = -1;
+        }
     }
 
     @Override
@@ -96,7 +156,7 @@ public class UpdateService extends Service {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            if(!parser.getItemList().get(0).equals("ve" + BuildConfig.VERSION_NAME)) {
+                            if(!parser.getItemList().get(0).equals("v" + BuildConfig.VERSION_NAME)) {
                                 Log.i(TAG, "checkUpdate: App update found, notifying user");
 
                                 createNotificationChannels();

@@ -1,6 +1,8 @@
 package com.simon.rise.updates.ui.main;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.R;
+import com.simon.rise.updates.UpdateService;
 import com.simon.rise.updates.json.JSONParser;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -95,6 +99,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 updateInterval.setSummary(intervalString);
                 saveInterval();
+
+                // Start the service again if it was stopped before
+                if(!isServiceRunning(UpdateService.class)) {
+                    getContext().startService(new Intent(getActivity(), UpdateService.class));
+                }
             });
 
             alertDialog = builder.create();
@@ -108,39 +117,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void saveInterval() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(TEXT, intervalString);
         editor.apply();
     }
 
     public void loadInterval() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         intervalString = sharedPreferences.getString(TEXT, "Daily");
-    }
-
-    public long getInterval() {
-        if(intervalString.equals("Every 12hrs")) {
-            return 43200000;
-        }
-        else
-        if(intervalString.equals("Daily")) {
-            return 86400000;
-        }
-        else
-        if(intervalString.equals("Weekly")) {
-            return 604800000;
-        }
-        else
-        if(intervalString.equals("Never")) {
-            return -1;
-        }
-        else
-        {
-            // Default to daily
-            return 86400000;
-        }
     }
 
     @Override
