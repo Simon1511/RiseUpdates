@@ -164,7 +164,7 @@ public class UpdateService extends Service {
                                 notificationManager = NotificationManagerCompat.from(context);
 
                                 Notification notification = new NotificationCompat.Builder(context, CH1_ID)
-                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setSmallIcon(R.drawable.ic_notification_logo)
                                         .setContentTitle("App Update available")
                                         .setContentText("RiseUpdates " + parser.getItemList().get(0) + " is available!")
                                         .setPriority(NotificationCompat.PRIORITY_LOW)
