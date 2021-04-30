@@ -8,6 +8,10 @@
         <Preference
             android:key="updateButton"
             android:summary="Check for app update" />
+
+        <Preference
+            android:title="App-update check interval"
+            android:key="updateIntervalList" />
     </PreferenceCategory>
 
     <PreferenceCategory
