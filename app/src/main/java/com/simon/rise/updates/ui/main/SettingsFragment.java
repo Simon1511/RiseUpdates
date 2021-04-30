@@ -1,5 +1,7 @@
 package com.simon.rise.updates.ui.main;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +32,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private String intervalString = "Daily";
 
+    public static final String SHARED_PREFS = "prefs";
+    public static final String TEXT = "updateInterval";
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
@@ -55,6 +60,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         Preference updateInterval = findPreference("updateIntervalList");
+
+        loadInterval();
 
         if(intervalString != null) {
             updateInterval.setSummary(intervalString);
@@ -87,6 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     intervalString = "None";
                 }
                 updateInterval.setSummary(intervalString);
+                saveInterval();
             });
 
             alertDialog = builder.create();
@@ -98,6 +106,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             return true;
         });
+    }
+
+    public void saveInterval() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(TEXT, intervalString);
+        editor.apply();
+    }
+
+    public void loadInterval() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        intervalString = sharedPreferences.getString(TEXT, "Daily");
     }
 
     public long getInterval() {
