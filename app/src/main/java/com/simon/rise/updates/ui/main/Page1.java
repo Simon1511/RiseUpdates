@@ -201,7 +201,10 @@ public class Page1 extends Fragment {
     }
 
     public void onClickSpinners() {
-        // Disable spinners depending on selection
+        TextView version = fragmentView.findViewById(R.id.textView_chooseVersion_page1);
+        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page1);
+
+        // Make spinners invisible (GONE) depending on selection
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -210,15 +213,19 @@ public class Page1 extends Fragment {
                 if(spinner1.getSelectedItem().toString().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
-                    spinner2.setEnabled(false);
-                    spinner3.setEnabled(false);
+                    spinner2.setVisibility(View.GONE);
+                    spinner3.setVisibility(View.GONE);
+                    mirror.setVisibility(View.GONE);
+                    version.setVisibility(View.GONE);
+
                     parser3.getItemList().clear();
                 }
                 else
                 {
                     Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
                     spinner2.setSelection(0);
-                    spinner2.setEnabled(true);
+                    spinner2.setVisibility(View.VISIBLE);
+                    version.setVisibility(View.VISIBLE);
                 }
 
                 setSpinnerItems();
@@ -238,11 +245,15 @@ public class Page1 extends Fragment {
                 if(spinner2.getSelectedItem().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner2: Empty");
                     spinner3.setSelection(0);
-                    spinner3.setEnabled(false);
+                    spinner3.setVisibility(View.GONE);
+                    mirror.setVisibility(View.GONE);
                 }
 
                 // Get download links for whatever is selected in the spinner
                 if(!spinner2.getSelectedItem().toString().equals("")) {
+                    spinner3.setVisibility(View.VISIBLE);
+                    mirror.setVisibility(View.VISIBLE);
+
                     Log.i(TAG, "onItemSelected: " + spinner2.getSelectedItem().toString());
 
                     // We have different download links for v1.3 (Treble) and v1.3 (AOSP)

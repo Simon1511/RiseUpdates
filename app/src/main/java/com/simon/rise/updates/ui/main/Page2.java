@@ -130,16 +130,22 @@ public class Page2 extends Fragment {
     }
 
     public void onClickSpinners()  {
+        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page2);
+
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner1.getSelectedItem().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
-                    spinner2.setEnabled(false);
+                    spinner2.setVisibility(View.GONE);
+                    mirror.setVisibility(View.GONE);
                 }
 
                 if(spinner1.getSelectedItem() != "") {
+                    mirror.setVisibility(View.VISIBLE);
+                    spinner2.setVisibility(View.VISIBLE);
+
                     Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
 
                     Log.i(TAG, "onItemSelected Spinner1: Connecting to GitHub");
