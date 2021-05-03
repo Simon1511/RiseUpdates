@@ -23,6 +23,10 @@ import com.simon.rise.updates.R;
 import com.simon.rise.updates.UpdateService;
 import com.simon.rise.updates.json.JSONParser;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private static final String TAG = "SettingsFragment";
@@ -36,8 +40,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private String intervalString = "Daily";
 
-    public static final String SHARED_PREFS = "prefs";
-    public static final String TEXT = "updateInterval";
+    public static final String INTERVAL = "updateInterval";
+    public static final String DATE = "datePref";
+
+    private Preference updateButton;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -46,8 +52,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         parser = new JSONParser();
         connect = new HTTPConnecting(parser);
 
-        Preference updateButton = findPreference("updateButton");
+        updateButton = findPreference("updateButton");
+
+        loadDate();
+
         updateButton.setOnPreferenceClickListener(preference -> {
+            updateButton.setSummary("Last checked: " + getDate());
+            saveDate();
+
             Log.i(TAG, "onPreferenceClick: Connecting to GitHub");
             connect.connectURL("appVersion", versionsURL, "");
 
@@ -117,6 +129,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+    public String getDate() {
+        return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
+    }
+
+    public void saveDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(DATE, updateButton.getSummary().toString());
+        editor.apply();
+    }
+
+    public void loadDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        updateButton.setSummary(sharedPreferences.getString(DATE, "Never"));
+    }
+
     private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -130,13 +158,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void saveInterval() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(TEXT, intervalString);
+        editor.putString(INTERVAL, intervalString);
         editor.apply();
     }
 
     public void loadInterval() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        intervalString = sharedPreferences.getString(TEXT, "Daily");
+        intervalString = sharedPreferences.getString(INTERVAL, "Daily");
     }
 
     @Override
