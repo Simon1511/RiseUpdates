@@ -7,7 +7,7 @@
 
         <Preference
             android:key="updateButton"
-            android:summary="Check now for app update" />
+            android:title="Check now for app update" />
 
         <Preference
             android:title="App-update check interval"
