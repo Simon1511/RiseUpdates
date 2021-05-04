@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -99,12 +100,15 @@ public class UpdateService extends Service {
     }
 
     public void serviceNotification() {
-        Intent notificationIntent = new Intent(this, UpdateService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        Intent notificationIntent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                .putExtra("android.provider.extra.APP_PACKAGE", getPackageName())
+                .putExtra(Settings.EXTRA_CHANNEL_ID, CH2_ID);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(context, CH2_ID)
                 .setContentTitle("Background Service is running")
-                .setContentText("Click here to disable notification")
+                .setContentText("Click here to disable this notification")
                 .setSmallIcon(R.drawable.ic_notification_logo)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(Notification.CATEGORY_SERVICE)
@@ -221,13 +225,13 @@ public class UpdateService extends Service {
 
     public void createNotificationChannels() {
         NotificationChannel ch1 = new NotificationChannel(CH1_ID, "App Updates", NotificationManager.IMPORTANCE_LOW);
-        ch1.setDescription("App update notification");
+        ch1.setDescription("App update");
 
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(ch1);
 
         NotificationChannel ch2 = new NotificationChannel(CH2_ID, "Background Service", NotificationManager.IMPORTANCE_DEFAULT);
-        ch2.setDescription("Background Service notification");
+        ch2.setDescription("Background Service");
 
         manager.createNotificationChannel(ch2);
     }
