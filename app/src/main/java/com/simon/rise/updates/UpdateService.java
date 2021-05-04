@@ -3,6 +3,7 @@ package com.simon.rise.updates;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -30,6 +32,7 @@ public class UpdateService extends Service {
 
     // Notifications
     private static final String CH1_ID = "App updates";
+    private static final String CH2_ID = "Background Service";
     private NotificationManagerCompat notificationManager;
 
     // URLs
@@ -49,17 +52,33 @@ public class UpdateService extends Service {
 
     @Override
     public void onCreate() {
+        createNotificationChannels();
+        serviceNotification();
+
         Log.i(TAG, "onCreate: " + TAG + " created");
+
         // Load the update interval from Sharedpreferences
         loadInterval();
 
         // Update the interval if it was changed in settings
         updateInterval();
 
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
                 if(updateInterval != -1) {
+                    while(!powerManager.isInteractive()) {
+                        try {
+                            // Sleep for 30secs while the screen is off
+                            Thread.sleep(30000);
+                        }
+                        catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     Log.i(TAG, "onCreate: " + TAG + " is running");
                     Log.i(TAG, "run: " + updateInterval + "ms");
 
@@ -77,6 +96,22 @@ public class UpdateService extends Service {
 
         // Start the service after 15 seconds
         handler.postDelayed(runnable, 15000);
+    }
+
+    public void serviceNotification() {
+        Intent notificationIntent = new Intent(this, UpdateService.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(context, CH2_ID)
+                .setContentTitle("Background Service is running")
+                .setContentText("Click here to disable notification")
+                .setSmallIcon(R.drawable.ic_notification_logo)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        startForeground(2, notification);
     }
 
     public void updateInterval() {
@@ -159,8 +194,6 @@ public class UpdateService extends Service {
                             if(!parser.getItemList().get(0).equals("v" + BuildConfig.VERSION_NAME)) {
                                 Log.i(TAG, "checkUpdate: App update found, notifying user");
 
-                                createNotificationChannels();
-
                                 notificationManager = NotificationManagerCompat.from(context);
 
                                 Notification notification = new NotificationCompat.Builder(context, CH1_ID)
@@ -192,6 +225,11 @@ public class UpdateService extends Service {
 
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(ch1);
+
+        NotificationChannel ch2 = new NotificationChannel(CH2_ID, "Background Service", NotificationManager.IMPORTANCE_DEFAULT);
+        ch2.setDescription("Background Service notification");
+
+        manager.createNotificationChannel(ch2);
     }
 
     public boolean isConnected() {

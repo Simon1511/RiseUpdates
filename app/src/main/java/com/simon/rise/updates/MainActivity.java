@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         alr.deviceAlert(this);
 
         if(!isRunning()) {
-            startService(new Intent(this, UpdateService.class));
+            startForegroundService(new Intent(this, UpdateService.class));
         }
     }
 
