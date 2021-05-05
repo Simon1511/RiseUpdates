@@ -138,8 +138,9 @@ public class Page2 extends Fragment {
                 if(spinner1.getSelectedItem().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
-                    spinner2.setVisibility(View.GONE);
-                    mirror.setVisibility(View.GONE);
+                    spinner2.setVisibility(View.INVISIBLE);
+                    mirror.setVisibility(View.INVISIBLE);
+                    dlButton.setEnabled(false);
                 }
 
                 if(spinner1.getSelectedItem() != "") {

@@ -131,8 +131,9 @@ public class Page3 extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner1.getSelectedItem().equals("")) {
                     spinner2.setSelection(0);
-                    spinner2.setVisibility(View.GONE);
-                    mirror.setVisibility(View.GONE);
+                    spinner2.setVisibility(View.INVISIBLE);
+                    mirror.setVisibility(View.INVISIBLE);
+                    dlButton.setEnabled(false);
                 }
 
                 if(spinner1.getSelectedItem() != "") {

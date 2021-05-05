@@ -208,7 +208,7 @@ public class Page1 extends Fragment {
         TextView version = fragmentView.findViewById(R.id.textView_chooseVersion_page1);
         TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page1);
 
-        // Make spinners invisible (GONE) depending on selection
+        // Make spinners invisible depending on selection
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -217,10 +217,11 @@ public class Page1 extends Fragment {
                 if(spinner1.getSelectedItem().toString().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
-                    spinner2.setVisibility(View.GONE);
-                    spinner3.setVisibility(View.GONE);
-                    mirror.setVisibility(View.GONE);
-                    version.setVisibility(View.GONE);
+                    spinner2.setVisibility(View.INVISIBLE);
+                    spinner3.setVisibility(View.INVISIBLE);
+                    mirror.setVisibility(View.INVISIBLE);
+                    version.setVisibility(View.INVISIBLE);
+                    dlButton.setEnabled(false);
 
                     parser3.getItemList().clear();
                 }
@@ -249,8 +250,9 @@ public class Page1 extends Fragment {
                 if(spinner2.getSelectedItem().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner2: Empty");
                     spinner3.setSelection(0);
-                    spinner3.setVisibility(View.GONE);
-                    mirror.setVisibility(View.GONE);
+                    spinner3.setVisibility(View.INVISIBLE);
+                    mirror.setVisibility(View.INVISIBLE);
+                    dlButton.setEnabled(false);
                 }
 
                 // Get download links for whatever is selected in the spinner
