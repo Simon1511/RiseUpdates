@@ -273,12 +273,11 @@ public class Page2 extends Fragment {
         String line = props.read("ro.build.display.id");
         ImageView image = fragmentView.findViewById(R.id.imageView1_page2);
 
-        int lineIndex = line.indexOf(variable);
-
-        String str = line.substring(lineIndex);
-
         if(line.contains(variable)) {
             if(line.contains("Rise-Q")) {
+                int lineIndex = line.indexOf(variable);
+                String str = line.substring(lineIndex);
+
                 if(line.contains("v1 ")) {
                     Log.i(TAG, "checkInstalled: Rise-Q v1.0 installed");
                     tv.setText(str.substring(0, 2));
@@ -296,6 +295,12 @@ public class Page2 extends Fragment {
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }
+        }
+        else
+        {
+            Log.e(TAG, "checkInstalled: Rise-Q is not installed");
+            tv.setText(R.string.notInstalled);
+            image.setImageResource(R.drawable.ic_x_icon);
         }
     }
 }
