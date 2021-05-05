@@ -68,6 +68,8 @@ public class Page1 extends Fragment {
 
     private ArrayAdapter<String> adapter2;
 
+    private String linuxVer;
+
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
         Bundle bundle = new Bundle();
@@ -108,6 +110,8 @@ public class Page1 extends Fragment {
 
         // Gray out download button by default
         dlButton.setEnabled(false);
+
+        checkKernelVersion();
 
         getTypeVersion();
 
@@ -390,9 +394,31 @@ public class Page1 extends Fragment {
         }
     }
 
+    public void checkKernelVersion() {
+        try {
+            Process process = new ProcessBuilder().command("/system/bin/uname", "-r").redirectErrorStream(true).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = bufferedReader.readLine();
+            if(line.contains("3.18.140")) {
+                linuxVer = "3.18.140";
+            }
+            else
+            if(line.contains("3.18.91")) {
+                linuxVer = "3.18.91";
+            }
+            else
+            {
+                linuxVer = "3.18.14";
+            }
+            Log.i(TAG, "checkKernelVersion: Device is running a kernel with Linux " + linuxVer);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setSpinnerItems() {
         Log.i(TAG, "setSpinnerItems: Setup Spinner2 selections");
-
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
             for (int i = 0; i<parser2.getItemList().size(); i++) {
                 if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
@@ -400,8 +426,27 @@ public class Page1 extends Fragment {
                 }
             }
 
-            if(!parser2.getItemList().contains("v1.4-1")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4-1");
+            if(parser2.getItemList().size() >= 2) {
+                if (linuxVer.equals("3.18.14")) {
+                    for (int i = 0; i < parser2.getItemList().size(); i++) {
+                        /* If the user runs a ROM with the old oreo kernel, we shouldnt show new
+                         * kernel updates as they are only for ROMs running the pie kernel */
+                        if (parser2.getItemList().get(i).equals("v1.4") || parser2.getItemList().get(i).equals("v1.3")
+                                || parser2.getItemList().get(i).equals("v1.2") || parser2.getItemList().get(i).equals("v1.1")
+                                || parser2.getItemList().get(i).equals("v1") || parser2.getItemList().get(i).equals("")) {
+                            // DUMMY
+                            Log.i(TAG, "setSpinnerItems:");
+                        } else {
+                            parser2.getItemList().remove(i);
+                        }
+                    }
+                }
+                else
+                if(linuxVer.equals("3.18.91") || linuxVer.equals("3.18.140")) {
+                    if(!parser2.getItemList().contains("v1.4-1")) {
+                        parser2.getItemList().add(parser2.getItemList().size(), "v1.4-1");
+                    }
+                }
             }
 
             if(!parser2.getItemList().contains("v1.4")) {
