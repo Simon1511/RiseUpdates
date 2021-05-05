@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -200,12 +201,20 @@ public class UpdateService extends Service {
 
                                 notificationManager = NotificationManagerCompat.from(context);
 
+                                Uri uri = Uri.parse("https://github.com/Simon1511/RiseUpdates/releases/download/"
+                                        + parser.getItemList().get(0) + "/RiseUpdates-" + parser.getItemList().get(0) + ".apk");
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
                                 Notification notification = new NotificationCompat.Builder(context, CH1_ID)
                                         .setSmallIcon(R.drawable.ic_notification_logo)
                                         .setContentTitle("App Update available")
                                         .setContentText("RiseUpdates " + parser.getItemList().get(0) + " is available!")
                                         .setPriority(NotificationCompat.PRIORITY_LOW)
                                         .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                        .setContentIntent(pendingIntent)
                                         .build();
                                 notificationManager.notify(1, notification);
                             }
