@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -65,22 +64,10 @@ public class UpdateService extends Service {
         // Update the interval if it was changed in settings
         updateInterval();
 
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
                 if(updateInterval != -1) {
-                    while(!powerManager.isInteractive()) {
-                        try {
-                            // Sleep for 30secs while the screen is off
-                            Thread.sleep(30000);
-                        }
-                        catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                     Log.i(TAG, "onCreate: " + TAG + " is running");
                     Log.i(TAG, "run: " + updateInterval + "ms");
 
