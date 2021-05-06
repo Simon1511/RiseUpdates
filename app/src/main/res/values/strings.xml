@@ -19,4 +19,5 @@
         <item>Weekly</item>
         <item>Never</item>
     </string-array>
+    <string name="buildDate">[PLACEHOLDER]</string>
 </resources>
