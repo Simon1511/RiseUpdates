@@ -1,5 +1,6 @@
 package com.simon.rise.updates.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,6 +24,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.R;
 import com.simon.rise.updates.json.JSONParser;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -85,6 +91,8 @@ public class Page3 extends Fragment {
 
         dlButton = fragmentView.findViewById(R.id.button_dl_page3);
         dlButton.setEnabled(false);
+
+        checkInstalled();
 
         getVersions();
         initializeSpinners();
@@ -258,5 +266,32 @@ public class Page3 extends Fragment {
                 }
             }
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void checkInstalled() {
+        try {
+            TextView tv = fragmentView.findViewById(R.id.textView_version_page3);
+            Process process = new ProcessBuilder().command("/system/bin/cat", "/proc/mounts").redirectErrorStream(true).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line = bufferedReader.readLine();
+            ImageView image = fragmentView.findViewById(R.id.imageView1_page3);
+
+            if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
+                Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
+                tv.setText("v1.1");
+                image.setImageResource(R.drawable.ic_hook_icon);
+            }
+            else
+            {
+                Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
+                tv.setText(R.string.notInstalled);
+                image.setImageResource(R.drawable.ic_x_icon);
+            }
+        }
+        catch(IOException e)  {
+            e.printStackTrace();
+        }
     }
 }
