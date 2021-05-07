@@ -421,12 +421,12 @@ public class Page1 extends Fragment {
 
     public void setSpinnerItems() {
         Log.i(TAG, "setSpinnerItems: Setup Spinner2 selections");
+
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
+
+            int index;
+
+            parser2.getItemList().remove("v3 (Pie)");
 
             if(parser2.getItemList().size() >= 2) {
                 if (linuxVer.equals("3.18.14")) {
@@ -451,148 +451,81 @@ public class Page1 extends Fragment {
                 }
             }
 
+            if(linuxVer.equals("3.18.14")) {
+                index = 1;
+            }
+            else
+            {
+                index = 2;
+            }
+
             if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4");
+                parser2.getItemList().add(index, "v1.4");
             }
 
             if(!parser2.getItemList().contains("v1.3")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.3");
+                parser2.getItemList().add(index+1, "v1.3");
             }
 
             if(!parser2.getItemList().contains("v1.2")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.2");
+                parser2.getItemList().add(index+2, "v1.2");
             }
 
             if(!parser2.getItemList().contains("v1.1")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.1");
+                parser2.getItemList().add(index+3, "v1.1");
             }
 
             if(!parser2.getItemList().contains("v1")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1");
+                parser2.getItemList().add(index+4, "v1");
             }
         }
 
         if(spinner1.getSelectedItem().toString().equals("Treble 10.0")) {
-            if(!parser2.getItemList().contains("v1.3")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.3");
-            }
+            parser2.getItemList().remove("v1.2");
+            parser2.getItemList().remove("v1.1");
+            parser2.getItemList().remove("v1");
+            parser2.getItemList().remove("v3 (Pie)");
 
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.2"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            if(!parser2.getItemList().contains("v1.3")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.3");
+            if(!parser2.getItemList().contains("v1.4-1")) {
+                parser2.getItemList().add(1, "v1.4-1");
             }
 
             if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4");
+                parser2.getItemList().add(2, "v1.4");
             }
 
-            if(!parser2.getItemList().contains("v1.4-1")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4-1");
+            if(!parser2.getItemList().contains("v1.3")) {
+                parser2.getItemList().add(3, "v1.3");
             }
         }
 
         if(spinner1.getSelectedItem().toString().equals("OneUI 10.0")) {
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v3 (Pie)"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.2"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.3"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.4"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.4-1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
+            // Old and current versions (v1.4-1) don't have support for OneUI yet
+            parser2.getItemList().remove("v1.4-1");
+            parser2.getItemList().remove("v1.4");
+            parser2.getItemList().remove("v1.3");
+            parser2.getItemList().remove("v1.2");
+            parser2.getItemList().remove("v1.1");
+            parser2.getItemList().remove("v1");
+            parser2.getItemList().remove("v3 (Pie)");
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.1"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.2"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
-
-            for (int i = 0; i<parser2.getItemList().size(); i++) {
-                if(parser2.getItemList().get(i).equals("v1.3"))  {
-                    parser2.getItemList().remove(i);
-                }
-            }
+            parser2.getItemList().remove("v1.3");
+            parser2.getItemList().remove("v1.2");
+            parser2.getItemList().remove("v1.1");
+            parser2.getItemList().remove("v1");
 
             if(!parser2.getItemList().contains("v1.4-1")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4-1");
+                parser2.getItemList().add(1, "v1.4-1");
             }
 
             if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v1.4");
+                parser2.getItemList().add(2, "v1.4");
             }
 
             if(!parser2.getItemList().contains("v3 (Pie)")) {
-                parser2.getItemList().add(parser2.getItemList().size(), "v3 (Pie)");
+                parser2.getItemList().add(3, "v3 (Pie)");
             }
         }
 
