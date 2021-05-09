@@ -478,7 +478,7 @@ public class UpdateService extends Service {
                             }
                             else
                             {
-                                Log.i(TAG, "checkUpdate: Newest app version already installed");
+                                Log.e(TAG, "checkUpdate: No app update available");
                             }
                         }
                     });
