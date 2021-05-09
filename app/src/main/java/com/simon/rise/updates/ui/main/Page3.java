@@ -28,6 +28,7 @@ import com.simon.rise.updates.json.JSONParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -275,7 +276,7 @@ public class Page3 extends Fragment {
             Process process = new ProcessBuilder().command("/system/bin/cat", "/proc/mounts").redirectErrorStream(true).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            String line = bufferedReader.readLine();
+            String line = bufferedReader.lines().collect(Collectors.joining());
             ImageView image = fragmentView.findViewById(R.id.imageView1_page3);
 
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
