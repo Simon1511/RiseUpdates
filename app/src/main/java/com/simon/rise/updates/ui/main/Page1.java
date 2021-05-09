@@ -70,6 +70,9 @@ public class Page1 extends Fragment {
 
     private String linuxVer;
 
+    private TextView version;
+    private TextView mirror;
+
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
         Bundle bundle = new Bundle();
@@ -116,6 +119,15 @@ public class Page1 extends Fragment {
         getTypeVersion();
 
         initializeSpinners();
+
+        version = fragmentView.findViewById(R.id.textView_chooseVersion_page1);
+        mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page1);
+
+        spinner2.setVisibility(View.INVISIBLE);
+        spinner3.setVisibility(View.INVISIBLE);
+        mirror.setVisibility(View.INVISIBLE);
+        version.setVisibility(View.INVISIBLE);
+
         onClickSpinners();
         onClickButtons();
 
@@ -205,9 +217,6 @@ public class Page1 extends Fragment {
     }
 
     public void onClickSpinners() {
-        TextView version = fragmentView.findViewById(R.id.textView_chooseVersion_page1);
-        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page1);
-
         // Make spinners invisible depending on selection
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
