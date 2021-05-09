@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -27,6 +29,7 @@ import com.simon.rise.updates.json.JSONParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 public class UpdateService extends Service {
 
@@ -81,6 +84,7 @@ public class UpdateService extends Service {
                     checkAppUpdate();
                     checkKernelVersion();
                     checkRiseQVersion();
+                    checkRiseTrebleVersion();
 
                     handler.postDelayed(runnable, updateInterval);
                 }
@@ -338,6 +342,79 @@ public class UpdateService extends Service {
 
         Thread t = new Thread(run);
         t.start();
+    }
+
+    public void checkRiseTrebleVersion() {
+        try {
+            JSONParser parser = new JSONParser();
+            HTTPConnecting connect = new HTTPConnecting(parser);
+
+            connect.connectURL("riseTreble-q", versionsURL, "");
+
+            Process process = new ProcessBuilder().command("/system/bin/cat", "/proc/mounts").redirectErrorStream(true).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line = bufferedReader.lines().collect(Collectors.joining());
+
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    while(parser.getItemList().size() <= 1) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(parser.getItemList().size() >= 2) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
+                                    if(parser.getItemList().get(0).equals("v1.1")) {
+                                        Log.i(TAG, "checkRiseTrebleVersion: No update was found");
+                                    }
+                                    else
+                                    {
+                                        Log.i(TAG, "checkRiseTrebleVersion: Update found, notifying user");
+
+                                        notificationManager = NotificationManagerCompat.from(context);
+
+                                        Intent intent = new Intent(context, MainActivity.class);
+                                        intent.putExtra("page", 2);
+
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                        Notification notification = new NotificationCompat.Builder(context, CH1_ID)
+                                                .setSmallIcon(R.drawable.ic_notification_logo)
+                                                .setContentTitle("RiseTreble update available")
+                                                .setContentText("RiseTreble " + parser.getItemList().get(0) + " is available!")
+                                                .setPriority(NotificationCompat.PRIORITY_LOW)
+                                                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true)
+                                                .build();
+
+                                        notificationManager.notify(1, notification);
+                                    }
+                                }
+                                else
+                                {
+                                    Log.e(TAG, "checkRiseTrebleVersion: riseTreble-Q is not installed");
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+
+            Thread t = new Thread(run);
+            t.start();
+        }
+        catch(IOException e)  {
+            e.printStackTrace();
+        }
     }
 
     public void checkAppUpdate() {

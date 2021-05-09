@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         if(intent.getIntExtra("page", 0) == 1) {
             viewPager.setCurrentItem(1);
         }
+        else
+        if(intent.getIntExtra("page", 0) == 2) {
+            viewPager.setCurrentItem(2);
+        }
 
         alr.deviceAlert(this);
 
