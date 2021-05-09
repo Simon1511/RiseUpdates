@@ -322,7 +322,7 @@ public class UpdateService extends Service {
                                                 .setAutoCancel(true)
                                                 .build();
 
-                                        notificationManager.notify(1, notification);
+                                        notificationManager.notify(2, notification);
                                     }
                                 }
                                 else
@@ -396,7 +396,7 @@ public class UpdateService extends Service {
                                                 .setAutoCancel(true)
                                                 .build();
 
-                                        notificationManager.notify(1, notification);
+                                        notificationManager.notify(3, notification);
                                     }
                                 }
                                 else
@@ -466,7 +466,7 @@ public class UpdateService extends Service {
                                         .setContentIntent(pendingIntent)
                                         .setAutoCancel(true)
                                         .build();
-                                notificationManager.notify(1, notification);
+                                notificationManager.notify(4, notification);
                             }
                             else
                             {
