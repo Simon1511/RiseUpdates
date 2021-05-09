@@ -1,7 +1,7 @@
-package com.simon.rise.updates.HTTP;
+package com.simon.rise.updates.Others;
 
 import android.util.Log;
-import com.simon.rise.updates.json.JSONParser;
+
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import okhttp3.Call;

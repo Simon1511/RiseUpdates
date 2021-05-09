@@ -1,6 +1,5 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,22 +20,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.simon.rise.updates.HTTP.HTTPConnecting;
+import com.simon.rise.updates.Others.HTTPConnecting;
 import com.simon.rise.updates.R;
-import com.simon.rise.updates.SystemProperties.SystemProperties;
-import com.simon.rise.updates.json.JSONParser;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
+import com.simon.rise.updates.Others.SystemProperties;
+import com.simon.rise.updates.Others.JSONParser;
+import com.simon.rise.updates.Others.AlertDialogRunnable;
+import com.simon.rise.updates.Others.SupportButtons;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class Page3 extends Fragment {
+public class Page2 extends Fragment {
 
-    public static final String TAG = "Page3";
+    private static final String TAG = "Page2";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -55,14 +51,16 @@ public class Page3 extends Fragment {
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
     private static final String downloadURL = "https://raw.githubusercontent.com/Simon1511/random/master/downloads.json";
-    private static final String xdaURL = "https://forum.xda-developers.com/t/treble-aosp-10-0-risetreble-v1-1-for-a5-and-a7-2017.4160213/";
+    private static final String xdaURL = "https://forum.xda-developers.com/t/rom-10-0-oneui-2-5-rise-q-v2-0-for-a5-and-a7-2017.4203007/";
+
+    private final SystemProperties props = new SystemProperties();
 
     private Button dlButton;
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
-    public static Page3 newInstance(int index) {
-        Page3 fragment = new Page3();
+    public static Page2 newInstance(int index) {
+        Page2 fragment = new Page2();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
@@ -84,17 +82,15 @@ public class Page3 extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_page3, container, false);
+        View root = inflater.inflate(R.layout.fragment_page2, container, false);
 
         this.fragmentView = root;
 
         SupportButtons spB = new SupportButtons(getActivity());
         spB.supportButtons(fragmentView, xdaURL);
 
-        dlButton = fragmentView.findViewById(R.id.button_dl_page3);
+        dlButton = fragmentView.findViewById(R.id.button_dl_page2);
         dlButton.setEnabled(false);
-
-        checkInstalled();
 
         getVersions();
         initializeSpinners();
@@ -102,21 +98,23 @@ public class Page3 extends Fragment {
 
         onClickButtons();
 
+        checkInstalled();
+
         return root;
     }
 
     public void getVersions() {
         Log.i(TAG, "getVersions: Connecting to GitHub");
 
-        // Get riseTreble versions from Github JSON
-        connect.connectURL("riseTreble-q", versionsURL, "");
+        // Get Rise-Q versions from Github JSON
+        connect.connectURL("rise-q", versionsURL, "");
     }
 
     public void initializeSpinners() {
         Log.i(TAG, "initializeSpinners: Initialize Spinner 1");
 
         // Create a dropdown-list for versions
-        spinner1 = fragmentView.findViewById(R.id.spinner1_page3);
+        spinner1 = fragmentView.findViewById(R.id.spinner1_page2);
 
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -130,16 +128,17 @@ public class Page3 extends Fragment {
         Log.i(TAG, "initializeSpinners: Initialize Spinner 2");
 
         // Create a dropdown-list for download mirrors
-        spinner2 = fragmentView.findViewById(R.id.spinner2_page3);
+        spinner2 = fragmentView.findViewById(R.id.spinner2_page2);
     }
 
     public void onClickSpinners()  {
-        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page3);
+        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page2);
 
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinner1.getSelectedItem().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
                     spinner2.setVisibility(View.INVISIBLE);
                     mirror.setVisibility(View.INVISIBLE);
@@ -154,8 +153,8 @@ public class Page3 extends Fragment {
 
                     Log.i(TAG, "onItemSelected Spinner1: Connecting to GitHub");
 
-                    // Get riseTreble downloads from Github JSON
-                    connect2.connectURL(spinner1.getSelectedItem().toString(), downloadURL, "riseTreble-q");
+                    // Get Rise-Q downloads from Github JSON
+                    connect2.connectURL(spinner1.getSelectedItem().toString(), downloadURL, "rise-q");
                     Runnable run = () -> {
                         /* Run this once in an if-clause and then in a while-loop */
                         if(parser2.getItemList().size() <= 1) {
@@ -173,7 +172,7 @@ public class Page3 extends Fragment {
 
                         if(parser2.getItemList().size() > 1) {
                             new Handler(Looper.getMainLooper()).post(() -> {
-                                ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+                                ArrayAdapter<String> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
                                 dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 dlAdapter.add("");
                                 for(int i = 0; i<parser2.getItemList().size(); i++) {
@@ -270,64 +269,70 @@ public class Page3 extends Fragment {
         });
     }
 
-    @SuppressLint("SetTextI18n")
     public void checkInstalled() {
-        try {
-            TextView tv = fragmentView.findViewById(R.id.textView_version_page3);
-            Process process = new ProcessBuilder().command("/system/bin/cat", "/proc/mounts").redirectErrorStream(true).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        TextView tv = fragmentView.findViewById(R.id.textView_version_page2);
 
-            String line = bufferedReader.lines().collect(Collectors.joining());
-            ImageView image = fragmentView.findViewById(R.id.imageView1_page3);
-            SystemProperties props = new SystemProperties();
+        String variable = "v";
+        String line = props.read("ro.build.display.id");
+        ImageView image = fragmentView.findViewById(R.id.imageView1_page2);
 
-            if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
-                Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
-                tv.setText("v1.1");
+        if(line.contains(variable)) {
+            if(line.contains("Rise-Q")) {
+                int lineIndex = line.indexOf(variable);
+                String str = line.substring(lineIndex);
+
+                if(line.contains("v1 ")) {
+                    Log.i(TAG, "checkInstalled: Rise-Q v1.0 installed");
+                    tv.setText(str.substring(0, 2));
+                }
+                else
+                {
+                    Log.i(TAG, "checkInstalled: Rise-Q " + str.substring(0, 4) + " installed");
+                    tv.setText(str.substring(0, 4));
+                }
                 image.setImageResource(R.drawable.ic_hook_icon);
 
-                // Newer versions will have a "ro.risetreble.version" prop
-                if(props.read("ro.risetreble.version") != null) {
-                    tv.setText(props.read("ro.risetreble.version"));
-                }
+                Runnable run = new Runnable() {
+                    @Override
+                    public void run() {
+                        while(parser.getItemList().size() <= 2) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(parser.getItemList().size() >= 3) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("None")) {
+                                        Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
+                                        image.setImageResource(R.drawable.ic_update_icon);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                };
+
+                Thread t = new Thread(run);
+                t.start();
+
             }
             else
             {
-                Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
+                Log.e(TAG, "checkInstalled: Rise-Q is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }
-
-            Runnable run = new Runnable() {
-                @Override
-                public void run() {
-                    while(parser.getItemList().size() <= 2) {
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if(parser.getItemList().size() >= 3) {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("None")) {
-                                    Log.i(TAG, "checkInstalled: riseTreble " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
-                                    image.setImageResource(R.drawable.ic_update_icon);
-                                }
-                            }
-                        });
-                    }
-                }
-            };
-
-            Thread t = new Thread(run);
-            t.start();
         }
-        catch(IOException e)  {
-            e.printStackTrace();
+        else
+        {
+            Log.e(TAG, "checkInstalled: Rise-Q is not installed");
+            tv.setText(R.string.notInstalled);
+            image.setImageResource(R.drawable.ic_x_icon);
         }
     }
 }

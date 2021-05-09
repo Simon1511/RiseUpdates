@@ -1,4 +1,4 @@
-package com.simon.rise.updates;
+package com.simon.rise.updates.Activities;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -13,8 +13,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.simon.rise.updates.ui.main.AlertDialogRunnable;
-import com.simon.rise.updates.ui.main.SectionsPagerAdapter;
+import com.simon.rise.updates.R;
+import com.simon.rise.updates.Services.UpdateService;
+import com.simon.rise.updates.Others.AlertDialogRunnable;
+import com.simon.rise.updates.Fragments.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

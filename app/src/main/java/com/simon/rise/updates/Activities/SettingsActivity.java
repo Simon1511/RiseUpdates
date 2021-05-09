@@ -1,4 +1,4 @@
-package com.simon.rise.updates;
+package com.simon.rise.updates.Activities;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,7 +9,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.simon.rise.updates.ui.main.SettingsFragment;
+import com.simon.rise.updates.R;
+import com.simon.rise.updates.Fragments.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 

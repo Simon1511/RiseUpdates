@@ -1,4 +1,4 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Fragments;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

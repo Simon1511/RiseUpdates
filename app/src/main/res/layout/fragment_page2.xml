@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.Page2">
+    tools:context=".Fragments.Page2">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1_page2"

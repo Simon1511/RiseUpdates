@@ -1,4 +1,4 @@
-package com.simon.rise.updates.json;
+package com.simon.rise.updates.Others;
 
 import android.os.Handler;
 import android.os.Looper;

@@ -1,4 +1,4 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Others;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,8 +16,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.simon.rise.updates.BuildConfig;
 import com.simon.rise.updates.R;
-import com.simon.rise.updates.SystemProperties.SystemProperties;
-import com.simon.rise.updates.json.JSONParser;
 
 public class AlertDialogRunnable {
 

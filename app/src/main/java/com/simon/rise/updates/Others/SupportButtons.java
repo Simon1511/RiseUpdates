@@ -1,4 +1,4 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Others;
 
 import android.content.Context;
 import android.content.Intent;

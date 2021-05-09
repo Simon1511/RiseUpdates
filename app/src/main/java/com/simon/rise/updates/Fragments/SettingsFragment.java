@@ -1,4 +1,4 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Fragments;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -18,10 +18,11 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import com.simon.rise.updates.HTTP.HTTPConnecting;
+import com.simon.rise.updates.Others.HTTPConnecting;
 import com.simon.rise.updates.R;
-import com.simon.rise.updates.UpdateService;
-import com.simon.rise.updates.json.JSONParser;
+import com.simon.rise.updates.Services.UpdateService;
+import com.simon.rise.updates.Others.JSONParser;
+import com.simon.rise.updates.Others.AlertDialogRunnable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

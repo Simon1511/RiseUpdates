@@ -1,4 +1,4 @@
-package com.simon.rise.updates.ui.main;
+package com.simon.rise.updates.Fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,10 +21,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.simon.rise.updates.HTTP.HTTPConnecting;
+import com.simon.rise.updates.Others.HTTPConnecting;
 import com.simon.rise.updates.R;
-import com.simon.rise.updates.SystemProperties.SystemProperties;
-import com.simon.rise.updates.json.JSONParser;
+import com.simon.rise.updates.Others.SystemProperties;
+import com.simon.rise.updates.Others.JSONParser;
+import com.simon.rise.updates.Others.AlertDialogRunnable;
+import com.simon.rise.updates.Others.SupportButtons;
 
 import java.io.BufferedReader;
 import java.io.IOException;

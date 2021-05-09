@@ -1,4 +1,4 @@
-package com.simon.rise.updates.SystemProperties;
+package com.simon.rise.updates.Others;
 
 import android.util.Log;
 

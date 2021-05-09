@@ -1,4 +1,4 @@
-package com.simon.rise.updates;
+package com.simon.rise.updates.Services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,9 +20,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 
-import com.simon.rise.updates.HTTP.HTTPConnecting;
-import com.simon.rise.updates.SystemProperties.SystemProperties;
-import com.simon.rise.updates.json.JSONParser;
+import com.simon.rise.updates.BuildConfig;
+import com.simon.rise.updates.Others.HTTPConnecting;
+import com.simon.rise.updates.Activities.MainActivity;
+import com.simon.rise.updates.R;
+import com.simon.rise.updates.Others.SystemProperties;
+import com.simon.rise.updates.Others.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

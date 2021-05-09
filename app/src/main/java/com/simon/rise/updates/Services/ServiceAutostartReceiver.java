@@ -1,4 +1,4 @@
-package com.simon.rise.updates;
+package com.simon.rise.updates.Services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

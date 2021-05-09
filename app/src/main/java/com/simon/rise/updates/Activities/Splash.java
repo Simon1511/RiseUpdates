@@ -1,4 +1,4 @@
-package com.simon.rise.updates;
+package com.simon.rise.updates.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
+
+import com.simon.rise.updates.BuildConfig;
+import com.simon.rise.updates.R;
 
 public class Splash extends Activity {
 
