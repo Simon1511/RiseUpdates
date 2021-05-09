@@ -289,6 +289,35 @@ public class Page2 extends Fragment {
                     tv.setText(str.substring(0, 4));
                 }
                 image.setImageResource(R.drawable.ic_hook_icon);
+
+                Runnable run = new Runnable() {
+                    @Override
+                    public void run() {
+                        while(parser.getItemList().size() <= 2) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(parser.getItemList().size() >= 3) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(!parser.getItemList().get(1).contentEquals(tv.getText())) {
+                                        Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
+                                        image.setImageResource(R.drawable.ic_update_icon);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                };
+
+                Thread t = new Thread(run);
+                t.start();
+
             }
             else
             {
