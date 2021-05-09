@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.R;
+import com.simon.rise.updates.SystemProperties.SystemProperties;
 import com.simon.rise.updates.json.JSONParser;
 
 import java.io.BufferedReader;
@@ -278,11 +279,17 @@ public class Page3 extends Fragment {
 
             String line = bufferedReader.lines().collect(Collectors.joining());
             ImageView image = fragmentView.findViewById(R.id.imageView1_page3);
+            SystemProperties props = new SystemProperties();
 
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
                 Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
                 tv.setText("v1.1");
                 image.setImageResource(R.drawable.ic_hook_icon);
+
+                // Newer versions will have a "ro.risetreble.version" prop
+                if(props.read("ro.risetreble.version") != null) {
+                    tv.setText(props.read("ro.risetreble.version"));
+                }
             }
             else
             {
@@ -290,6 +297,34 @@ public class Page3 extends Fragment {
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
             }
+
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    while(parser.getItemList().size() <= 2) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(parser.getItemList().size() >= 3) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("None")) {
+                                    Log.i(TAG, "checkInstalled: riseTreble " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
+                                    image.setImageResource(R.drawable.ic_update_icon);
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+
+            Thread t = new Thread(run);
+            t.start();
         }
         catch(IOException e)  {
             e.printStackTrace();
