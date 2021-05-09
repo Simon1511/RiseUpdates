@@ -23,6 +23,10 @@ import androidx.preference.PreferenceManager;
 import com.simon.rise.updates.HTTP.HTTPConnecting;
 import com.simon.rise.updates.json.JSONParser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class UpdateService extends Service {
 
     private static final String TAG = "UpdateService";
@@ -72,6 +76,7 @@ public class UpdateService extends Service {
                     Log.i(TAG, "run: " + updateInterval + "ms");
 
                     checkAppUpdate();
+                    checkKernelVersion();
 
                     handler.postDelayed(runnable, updateInterval);
                 }
@@ -152,6 +157,99 @@ public class UpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand: Service started!");
         return START_STICKY;
+    }
+
+    public void checkKernelVersion() {
+        try {
+            JSONParser parser = new JSONParser();
+            HTTPConnecting connect = new HTTPConnecting(parser);
+
+            Process process = new ProcessBuilder().command("/system/bin/uname", "-r").redirectErrorStream(true).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String variable = "v";
+            String line = bufferedReader.readLine();
+            String version;
+
+            int lineIndex = line.indexOf(variable);
+
+            if(line.contains(variable)) {
+                if(line.contains("riseKernel") || line.contains("ProjectRise")) {
+                    if(line.substring(lineIndex).equals("v4")) {
+                        version = "v4";
+                    }
+                    else
+                    {
+                        Log.i(TAG, "checkKernelVersion: riseKernel " + line.substring(lineIndex) + " installed");
+                        version = line.substring(lineIndex);
+                    }
+                    Log.i(TAG, "checkKernelVersion: Checking for update");
+
+                    connect.connectURL("riseKernel", versionsURL, "");
+
+                    Runnable run = new Runnable() {
+                        @Override
+                        public void run() {
+                            while(parser.getItemList().size() <= 1) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if(parser.getItemList().size() > 2) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(version.equals("v4") || version.equals("v3") || parser.getItemList().get(0).equals(version)) {
+                                            Log.i(TAG, "checkKernelVersion: No update was found");
+                                        }
+                                        else
+                                        {
+                                            Log.i(TAG, "checkKernelVersion: Update found, notifying user");
+
+                                            notificationManager = NotificationManagerCompat.from(context);
+
+                                            Intent intent = new Intent(context, MainActivity.class);
+
+                                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                            Notification notification = new NotificationCompat.Builder(context, CH1_ID)
+                                                    .setSmallIcon(R.drawable.ic_notification_logo)
+                                                    .setContentTitle("RiseKernel update available")
+                                                    .setContentText("RiseKernel " + parser.getItemList().get(0) + " is available!")
+                                                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                                                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                                    .setContentIntent(pendingIntent)
+                                                    .setAutoCancel(true)
+                                                    .build();
+
+                                            notificationManager.notify(1, notification);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                    };
+
+                    Thread t = new Thread(run);
+                    t.start();
+                }
+                else
+                {
+                    Log.e(TAG, "checkKernelVersion: riseKernel is not installed");
+                }
+            }
+            else
+            {
+                Log.e(TAG, "checkKernelVersion: riseKernel is not installed");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void checkAppUpdate() {
