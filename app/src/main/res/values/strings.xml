@@ -20,4 +20,8 @@
         <item>Never</item>
     </string-array>
     <string name="buildDate">[PLACEHOLDER]</string>
+    <string name="support">Support</string>
+    <string name="xda">XDA Thread</string>
+    <string name="telegram">Telegram group</string>
+    <string name="github">My Github profile</string>
 </resources>
