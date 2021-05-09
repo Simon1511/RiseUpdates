@@ -21,6 +21,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 
 import com.simon.rise.updates.HTTP.HTTPConnecting;
+import com.simon.rise.updates.SystemProperties.SystemProperties;
 import com.simon.rise.updates.json.JSONParser;
 
 import java.io.BufferedReader;
@@ -30,6 +31,8 @@ import java.io.InputStreamReader;
 public class UpdateService extends Service {
 
     private static final String TAG = "UpdateService";
+
+    private final SystemProperties props = new SystemProperties();
 
     public Context context = this;
     public Handler handler = null;
@@ -77,6 +80,7 @@ public class UpdateService extends Service {
 
                     checkAppUpdate();
                     checkKernelVersion();
+                    checkRiseQVersion();
 
                     handler.postDelayed(runnable, updateInterval);
                 }
@@ -250,6 +254,90 @@ public class UpdateService extends Service {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void checkRiseQVersion() {
+        JSONParser parser = new JSONParser();
+        HTTPConnecting connect = new HTTPConnecting(parser);
+
+        connect.connectURL("rise-q", versionsURL, "");
+
+        String variable = "v";
+        String line = props.read("ro.build.display.id");
+
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                while(parser.getItemList().size() <= 1) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(parser.getItemList().size() >= 2) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(line.contains(variable)) {
+                                if(line.contains("Rise-Q")) {
+                                    int lineIndex = line.indexOf(variable);
+                                    String str = line.substring(lineIndex);
+                                    String version;
+
+                                    if(line.contains("v1 ")) {
+                                        version = str.substring(0, 2);
+                                    }
+                                    else
+                                    {
+                                        version = str.substring(0, 4);
+                                    }
+
+                                    if(version.equals(parser.getItemList().get(0))) {
+                                        Log.i(TAG, "checkRiseQVersion: No update was found");
+                                    }
+                                    else
+                                    {
+                                        Log.i(TAG, "checkRiseQVersion: Update found, notifying user");
+
+                                        notificationManager = NotificationManagerCompat.from(context);
+
+                                        Intent intent = new Intent(context, MainActivity.class);
+                                        intent.putExtra("page", 1);
+
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                        Notification notification = new NotificationCompat.Builder(context, CH1_ID)
+                                                .setSmallIcon(R.drawable.ic_notification_logo)
+                                                .setContentTitle("Rise-Q update available")
+                                                .setContentText("Rise-Q " + parser.getItemList().get(0) + " is available!")
+                                                .setPriority(NotificationCompat.PRIORITY_LOW)
+                                                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true)
+                                                .build();
+
+                                        notificationManager.notify(1, notification);
+                                    }
+                                }
+                                else
+                                {
+                                    Log.e(TAG, "checkRiseQVersion: Rise-Q is not installed");
+                                }
+                            }
+                            else
+                            {
+                                Log.e(TAG, "checkRiseQVersion: Rise-Q is not installed");
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        Thread t = new Thread(run);
+        t.start();
     }
 
     public void checkAppUpdate() {

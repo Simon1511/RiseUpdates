@@ -34,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        if(intent.getIntExtra("page", 0) == 1) {
+            viewPager.setCurrentItem(1);
+        }
+
         alr.deviceAlert(this);
 
         if(!isRunning()) {
