@@ -104,8 +104,8 @@ public class UpdateService extends Service {
             }
         };
 
-        // Start the service after 15 seconds
-        handler.postDelayed(runnable, 15000);
+        // Start the service immediately
+        handler.postDelayed(runnable, 0);
     }
 
     public void serviceNotification() {
