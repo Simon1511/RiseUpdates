@@ -299,6 +299,7 @@ public class UpdateService extends Service {
                                         .setPriority(NotificationCompat.PRIORITY_LOW)
                                         .setCategory(NotificationCompat.CATEGORY_SERVICE)
                                         .setContentIntent(pendingIntent)
+                                        .setAutoCancel(true)
                                         .build();
                                 notificationManager.notify(1, notification);
                             }
