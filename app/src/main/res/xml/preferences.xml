@@ -11,7 +11,7 @@
             android:summary="Last checked: Never"/>
 
         <Preference
-            android:title="App-update check interval"
+            android:title="Update check interval"
             android:key="updateIntervalList" />
     </PreferenceCategory>
 

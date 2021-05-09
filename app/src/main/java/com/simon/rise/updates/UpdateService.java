@@ -15,8 +15,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -42,7 +40,7 @@ public class UpdateService extends Service {
     public static Runnable runnable = null;
 
     // Notifications
-    private static final String CH1_ID = "App updates";
+    private static final String CH1_ID = "Updates";
     private static final String CH2_ID = "Background Service";
     private NotificationManagerCompat notificationManager;
 
@@ -483,8 +481,8 @@ public class UpdateService extends Service {
     }
 
     public void createNotificationChannels() {
-        NotificationChannel ch1 = new NotificationChannel(CH1_ID, "App Updates", NotificationManager.IMPORTANCE_LOW);
-        ch1.setDescription("App update");
+        NotificationChannel ch1 = new NotificationChannel(CH1_ID, "Updates", NotificationManager.IMPORTANCE_LOW);
+        ch1.setDescription("Updates");
 
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(ch1);
