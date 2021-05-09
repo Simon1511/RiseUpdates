@@ -30,11 +30,16 @@ import com.simon.rise.updates.Others.JSONParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class UpdateService extends Service {
 
     private static final String TAG = "UpdateService";
+
+    public static final String DATE = "datePref";
 
     private final SystemProperties props = new SystemProperties();
 
@@ -86,6 +91,8 @@ public class UpdateService extends Service {
                     checkKernelVersion();
                     checkRiseQVersion();
                     checkRiseTrebleVersion();
+
+                    saveDate();
 
                     handler.postDelayed(runnable, updateInterval);
                 }
@@ -500,5 +507,17 @@ public class UpdateService extends Service {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    public void saveDate() {
+        Log.d(TAG, "saveDate: Save date of last update check");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(DATE, getDate());
+        editor.apply();
+    }
+
+    public String getDate() {
+        return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
     }
 }
