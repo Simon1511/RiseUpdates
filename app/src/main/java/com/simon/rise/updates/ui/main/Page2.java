@@ -305,7 +305,7 @@ public class Page2 extends Fragment {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(!parser.getItemList().get(1).contentEquals(tv.getText())) {
+                                    if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("None")) {
                                         Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
                                         image.setImageResource(R.drawable.ic_update_icon);
                                     }
