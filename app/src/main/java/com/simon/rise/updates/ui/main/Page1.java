@@ -558,6 +558,40 @@ public class Page1 extends Fragment {
                         tv.setText(line.substring(lineIndex));
                     }
                     image.setImageResource(R.drawable.ic_hook_icon);
+
+                    Runnable run = new Runnable() {
+                        @Override
+                        public void run() {
+                            while(parser2.getItemList().size() <= 2) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if(parser2.getItemList().size() >= 2) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(!parser2.getItemList().get(1).equals(line.substring(lineIndex))) {
+                                            Log.i(TAG, "checkInstalled: riseKernel " + line.substring(lineIndex) + " installed, but " + parser2.getItemList().get(1) + " is available");
+                                            image.setImageResource(R.drawable.ic_update_icon);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    };
+
+                    Thread t = new Thread(run);
+                    t.start();
+                }
+                else
+                {
+                    Log.e(TAG, "checkInstalled: riseKernel is not installed");
+                    tv.setText(R.string.notInstalled);
+                    image.setImageResource(R.drawable.ic_x_icon);
                 }
             }
             else
