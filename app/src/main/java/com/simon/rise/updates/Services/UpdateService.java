@@ -117,7 +117,7 @@ public class UpdateService extends Service {
 
         Notification notification = new NotificationCompat.Builder(context, CH2_ID)
                 .setContentTitle("Background Service is running")
-                .setContentText("Click here to disable this notification")
+                .setContentText("Tap here to disable this notification")
                 .setSmallIcon(R.drawable.ic_notification_logo)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(Notification.CATEGORY_SERVICE)
