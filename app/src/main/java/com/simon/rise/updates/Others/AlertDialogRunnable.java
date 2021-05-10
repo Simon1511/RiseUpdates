@@ -90,7 +90,7 @@ public class AlertDialogRunnable {
             AlertDialog alertDialog;
 
             builder.setTitle("Unsupported device detected");
-            builder.setMessage("Required device: a5y17lte/a7y17lte\n\nDetected device: " + props.read("ro.product.model"));
+            builder.setMessage("Required device: SM-A520/A720\n\nDetected device: " + props.read("ro.product.model"));
             builder.setCancelable(false);
 
             alertDialog = builder.create();
