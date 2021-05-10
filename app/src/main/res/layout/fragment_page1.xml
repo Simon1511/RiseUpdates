@@ -116,6 +116,7 @@
         android:textSize="12sp"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
+        android:backgroundTint="@color/gray"
         app:layout_constraintBottom_toBottomOf="@+id/textView1_page1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
