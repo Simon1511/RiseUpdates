@@ -513,7 +513,7 @@ public class UpdateService extends Service {
         Log.d(TAG, "saveDate: Save date of last update check");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(DATE, getDate());
+        editor.putString(DATE, "Last checked: " + getDate());
         editor.apply();
     }
 
