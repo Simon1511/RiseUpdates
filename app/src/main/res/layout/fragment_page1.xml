@@ -54,6 +54,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginStart="13dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline1_page1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +71,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -80,7 +83,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -90,7 +93,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline2_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -101,7 +104,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline3_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -128,7 +131,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -141,7 +144,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -150,7 +153,7 @@
         android:layout_height="40dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -162,7 +165,7 @@
         android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
@@ -172,7 +175,7 @@
         android:background="@drawable/spinner_bg"
         app:layout_constraintBottom_toTopOf="@+id/guideline4_page1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
@@ -186,6 +189,9 @@
             layout="@layout/support_icons"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginStart="13dp"
             android:layout_alignParentBottom="true"
             app:layout_constraintBottom_toBottomOf="parent" />
 
