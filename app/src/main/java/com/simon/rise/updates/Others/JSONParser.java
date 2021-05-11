@@ -16,6 +16,7 @@ public class JSONParser {
     private static final String TAG = "JSONParser";
 
     private List<String> itemList = new ArrayList<>();
+    private List<String> secList = new ArrayList<>();
 
     private String toUpdate2;
 
@@ -49,6 +50,7 @@ public class JSONParser {
                                 /* Add the String we got from the JSON to an
                                 Arraylist in case we need it later, e.g. for a spinner. */
                                 itemList.add(vArray.getString(j));
+                                secList.add(vArray.getString(j));
                             }
                         }
                         else
@@ -62,6 +64,7 @@ public class JSONParser {
                                 /* Add the String we got from the JSON to an
                                 Arraylist in case we need it later, e.g. for a spinner. */
                                 itemList.add(jsonArray.getString(j));
+                                secList.add(jsonArray.getString(j));
                             }
                         }
                     } catch (JSONException e) {
@@ -78,6 +81,10 @@ public class JSONParser {
 
     public List<String> getItemList() {
         return itemList;
+    }
+
+    public List<String> getSecList() {
+        return secList;
     }
 
     public String getToUpdate() {

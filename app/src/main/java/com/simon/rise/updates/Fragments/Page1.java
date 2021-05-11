@@ -437,15 +437,20 @@ public class Page1 extends Fragment {
     public void setSpinnerItems() {
         Log.i(TAG, "setSpinnerItems: Setup Spinner2 selections");
 
+        /* Clear the list every time the method is run
+        * and fill it up with getSecList(), which is a clone of getItemList()
+        * that remains untouched */
+        parser2.getItemList().clear();
+        parser2.getItemList().add("");
+        parser2.getItemList().addAll(parser2.getSecList());
+
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
-
-            int index;
-
             parser2.getItemList().remove("v3 (Pie)");
 
             if(parser2.getItemList().size() >= 2) {
                 if (linuxVer.equals("3.18.14")) {
-                    for (int i = 0; i < parser2.getItemList().size(); i++) {
+                    // Count backwards
+                    for (int i = parser2.getItemList().size()-1; i>0; i--) {
                         /* If the user runs a ROM with the old oreo kernel, we shouldnt show new
                          * kernel updates as they are only for ROMs running the pie kernel */
                         if (parser2.getItemList().get(i).equals("v1.4") || parser2.getItemList().get(i).equals("v1.3")
@@ -461,37 +466,9 @@ public class Page1 extends Fragment {
                 else
                 if(linuxVer.equals("3.18.91") || linuxVer.equals("3.18.140")) {
                     if(!parser2.getItemList().contains("v1.4-1")) {
-                        parser2.getItemList().add(parser2.getItemList().size(), "v1.4-1");
+                        parser2.getItemList().add(parser2.getItemList().indexOf("v1.5"), "v1.4-1");
                     }
                 }
-            }
-
-            if(linuxVer.equals("3.18.14")) {
-                index = 1;
-            }
-            else
-            {
-                index = 2;
-            }
-
-            if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(index, "v1.4");
-            }
-
-            if(!parser2.getItemList().contains("v1.3")) {
-                parser2.getItemList().add(index+1, "v1.3");
-            }
-
-            if(!parser2.getItemList().contains("v1.2")) {
-                parser2.getItemList().add(index+2, "v1.2");
-            }
-
-            if(!parser2.getItemList().contains("v1.1")) {
-                parser2.getItemList().add(index+3, "v1.1");
-            }
-
-            if(!parser2.getItemList().contains("v1")) {
-                parser2.getItemList().add(index+4, "v1");
             }
         }
 
@@ -500,18 +477,6 @@ public class Page1 extends Fragment {
             parser2.getItemList().remove("v1.1");
             parser2.getItemList().remove("v1");
             parser2.getItemList().remove("v3 (Pie)");
-
-            if(!parser2.getItemList().contains("v1.4-1")) {
-                parser2.getItemList().add(1, "v1.4-1");
-            }
-
-            if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(2, "v1.4");
-            }
-
-            if(!parser2.getItemList().contains("v1.3")) {
-                parser2.getItemList().add(3, "v1.3");
-            }
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 11.0")) {
@@ -534,10 +499,10 @@ public class Page1 extends Fragment {
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
-            parser2.getItemList().remove("v1.3");
-            parser2.getItemList().remove("v1.2");
-            parser2.getItemList().remove("v1.1");
-            parser2.getItemList().remove("v1");
+            /* Only add those three to the list as we
+            * don't want any version newer than v1.4-1 in here */
+            parser2.getItemList().clear();
+            parser2.getItemList().add("");
 
             if(!parser2.getItemList().contains("v1.4-1")) {
                 parser2.getItemList().add(1, "v1.4-1");
