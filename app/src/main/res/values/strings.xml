@@ -9,7 +9,7 @@
     <string name="gdrive_download">Google Drive</string>
     <string name="settingsOption">Settings</string>
     <string name="installedVersion">Installed version:</string>
-    <string name="notInstalled">None</string>
+    <string name="notInstalled">N/A</string>
     <string name="title_activity_settings">Settings</string>
     <string name="downloadMirror">Download mirror:</string>
     <string name="download">Download</string>
