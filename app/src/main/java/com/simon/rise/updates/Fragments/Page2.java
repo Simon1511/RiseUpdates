@@ -1,5 +1,6 @@
 package com.simon.rise.updates.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,6 +60,9 @@ public class Page2 extends Fragment {
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
+    private boolean installed;
+    private TextView tv;
+
     public static Page2 newInstance(int index) {
         Page2 fragment = new Page2();
         Bundle bundle = new Bundle();
@@ -99,6 +103,8 @@ public class Page2 extends Fragment {
         onClickButtons();
 
         checkInstalled();
+
+        setSpinnerSelection();
 
         return root;
     }
@@ -269,8 +275,40 @@ public class Page2 extends Fragment {
         });
     }
 
+    public void setSpinnerSelection() {
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                while(parser.getItemList().size() <= 1) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(parser.getItemList().size() >= 2) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(installed) {
+                                if(!tv.getText().equals(parser.getItemList().get(1))) {
+                                    spinner1.setSelection(1);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        Thread t = new Thread(run);
+        t.start();
+    }
+
+    @SuppressLint("SetTextI18n")
     public void checkInstalled() {
-        TextView tv = fragmentView.findViewById(R.id.textView_version_page2);
+        tv = fragmentView.findViewById(R.id.textView_version_page2);
 
         String variable = "v";
         String line = props.read("ro.build.display.id");
@@ -283,7 +321,7 @@ public class Page2 extends Fragment {
 
                 if(line.contains("v1 ")) {
                     Log.i(TAG, "checkInstalled: Rise-Q v1.0 installed");
-                    tv.setText(str.substring(0, 2));
+                    tv.setText(str.substring(0, 2) + ".0");
                 }
                 else
                 {
@@ -291,6 +329,8 @@ public class Page2 extends Fragment {
                     tv.setText(str.substring(0, 4));
                 }
                 image.setImageResource(R.drawable.ic_hook_icon);
+
+                installed = true;
 
                 Runnable run = new Runnable() {
                     @Override
@@ -326,6 +366,7 @@ public class Page2 extends Fragment {
                 Log.e(TAG, "checkInstalled: Rise-Q is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
+                installed = false;
             }
         }
         else
@@ -333,6 +374,7 @@ public class Page2 extends Fragment {
             Log.e(TAG, "checkInstalled: Rise-Q is not installed");
             tv.setText(R.string.notInstalled);
             image.setImageResource(R.drawable.ic_x_icon);
+            installed = false;
         }
     }
 }
