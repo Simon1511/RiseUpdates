@@ -75,8 +75,6 @@ public class Page1 extends Fragment {
     private TextView version;
     private TextView mirror;
 
-    private boolean installed;
-
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
         Bundle bundle = new Bundle();
@@ -537,69 +535,62 @@ public class Page1 extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            if(installed) {
-                                if(props.read("ro.build.version.release").equals("11")) {
-                                    if(props.read("ro.treble.enabled").equals("false")) {
-                                        if(spinner1.getItemAtPosition(1).equals("AOSP 11.0")) {
-                                            Log.i(TAG, "setSpinnerSelection: Device runs AOSP 11.0");
-                                            for (int i = 0; i < parser.getItemList().size(); i++) {
-                                                if(spinner1.getItemAtPosition(i).equals("AOSP 11.0")) {
-                                                    spinner1.setSelection(i);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if(spinner1.getItemAtPosition(3).equals("Treble 11.0")) {
-                                            Log.i(TAG, "setSpinnerSelection: Device runs Treble 11.0");
-                                            for (int i = 0; i < parser.getItemList().size(); i++) {
-                                                if(spinner1.getItemAtPosition(i).equals("Treble 11.0")) {
-                                                    spinner1.setSelection(i);
-                                                }
-                                            }
+                            if(props.read("ro.build.version.release").equals("11")) {
+                                if(props.read("ro.treble.enabled").equals("false")) {
+                                    Log.i(TAG, "setSpinnerSelection: Device runs AOSP 11.0");
+                                    for (int i = 0; i < parser.getItemList().size(); i++) {
+                                        if(spinner1.getItemAtPosition(i).equals("AOSP 11.0")) {
+                                            spinner1.setSelection(i);
                                         }
                                     }
                                 }
                                 else
-                                if(props.read("ro.build.version.release").equals("10")) {
-                                    if(props.read("ro.treble.enabled").equals("false")) {
-                                        Log.d(TAG, "setSpinnerSelection: Device runs AOSP 10.0");
+                                {
+                                    Log.i(TAG, "setSpinnerSelection: Device runs Treble 11.0");
+                                    for (int i = 0; i < parser.getItemList().size(); i++) {
+                                        if(spinner1.getItemAtPosition(i).equals("Treble 11.0")) {
+                                            spinner1.setSelection(i);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            if(props.read("ro.build.version.release").equals("10")) {
+                                if(props.read("ro.treble.enabled").equals("false")) {
+                                    Log.i(TAG, "setSpinnerSelection: Device runs AOSP 10.0");
+                                    for (int i = 0; i < parser.getItemList().size(); i++) {
+                                        if(spinner1.getItemAtPosition(i).equals("AOSP 10.0")) {
+                                            spinner1.setSelection(i);
+                                        }
+                                    }
+                                }
+                                else
+                                if(props.read("ro.treble.enabled").equals("true")) {
+                                    if(props.read("ro.build.display.id").contains("Rise-Q")) {
+                                        Log.i(TAG, "setSpinnerSelection: Device runs OneUI 10.0");
                                         for (int i = 0; i < parser.getItemList().size(); i++) {
-                                            if(spinner1.getItemAtPosition(i).equals("AOSP 10.0")) {
+                                            if(spinner1.getItemAtPosition(i).equals("OneUI 10.0")) {
                                                 spinner1.setSelection(i);
                                             }
                                         }
                                     }
                                     else
-                                    if(props.read("ro.treble.enabled").equals("true")) {
-                                        if(props.read("ro.build.display.id").contains("Rise-Q")) {
-                                            Log.i(TAG, "setSpinnerSelection: Device runs OneUI 10.0");
-                                            for (int i = 0; i < parser.getItemList().size(); i++) {
-                                                if(spinner1.getItemAtPosition(i).equals("OneUI 10.0")) {
-                                                    spinner1.setSelection(i);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Log.d(TAG, "setSpinnerSelection: Device runs Treble 10.0");
-                                            for (int i = 0; i < parser.getItemList().size(); i++) {
-                                                if(spinner1.getItemAtPosition(i).equals("Treble 10.0")) {
-                                                    spinner1.setSelection(i);
-                                                }
+                                    {
+                                        Log.i(TAG, "setSpinnerSelection: Device runs Treble 10.0");
+                                        for (int i = 0; i < parser.getItemList().size(); i++) {
+                                            if(spinner1.getItemAtPosition(i).equals("Treble 10.0")) {
+                                                spinner1.setSelection(i);
                                             }
                                         }
                                     }
-
                                 }
-                                else
-                                if(props.read("ro.build.version.release").equals("9")) {
-                                    Log.d(TAG, "setSpinnerSelection: Device runs AOSP 9.0");
-                                    for (int i = 0; i < parser.getItemList().size(); i++) {
-                                        if(spinner1.getItemAtPosition(i).equals("AOSP 9.0")) {
-                                            spinner1.setSelection(i);
-                                        }
+                            }
+                            else
+                            if(props.read("ro.build.version.release").equals("9")) {
+                                Log.d(TAG, "setSpinnerSelection: Device runs AOSP 9.0");
+                                for (int i = 0; i < parser.getItemList().size(); i++) {
+                                    if(spinner1.getItemAtPosition(i).equals("AOSP 9.0")) {
+                                        spinner1.setSelection(i);
                                     }
                                 }
                             }
@@ -639,8 +630,6 @@ public class Page1 extends Fragment {
                     }
                     image.setImageResource(R.drawable.ic_hook_icon);
 
-                    installed = true;
-
                     Runnable run = new Runnable() {
                         @Override
                         public void run() {
@@ -674,7 +663,6 @@ public class Page1 extends Fragment {
                     Log.e(TAG, "checkInstalled: riseKernel is not installed");
                     tv.setText(R.string.notInstalled);
                     image.setImageResource(R.drawable.ic_x_icon);
-                    installed = false;
                 }
             }
             else
@@ -682,7 +670,6 @@ public class Page1 extends Fragment {
                 Log.e(TAG, "checkInstalled: riseKernel is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
-                installed = false;
             }
         }
         catch(IOException e)  {

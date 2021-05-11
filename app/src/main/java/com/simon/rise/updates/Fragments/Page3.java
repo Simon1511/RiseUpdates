@@ -63,7 +63,6 @@ public class Page3 extends Fragment {
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
-    private boolean installed;
     private TextView tv;
 
     public static Page3 newInstance(int index) {
@@ -293,10 +292,8 @@ public class Page3 extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            if(installed) {
-                                if(!tv.getText().equals(parser.getItemList().get(1))) {
-                                    spinner1.setSelection(1);
-                                }
+                            if(!tv.getText().equals(parser.getItemList().get(1))) {
+                                spinner1.setSelection(1);
                             }
                         }
                     });
@@ -322,7 +319,6 @@ public class Page3 extends Fragment {
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
                 Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
                 tv.setText("v1.1");
-                installed = true;
                 image.setImageResource(R.drawable.ic_hook_icon);
 
                 // Newer versions will have a "ro.risetreble.version" prop
@@ -334,7 +330,6 @@ public class Page3 extends Fragment {
             {
                 Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
                 tv.setText(R.string.notInstalled);
-                installed = false;
                 image.setImageResource(R.drawable.ic_x_icon);
             }
 

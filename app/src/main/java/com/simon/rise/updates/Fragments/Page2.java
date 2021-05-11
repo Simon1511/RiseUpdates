@@ -60,7 +60,6 @@ public class Page2 extends Fragment {
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
-    private boolean installed;
     private TextView tv;
 
     public static Page2 newInstance(int index) {
@@ -291,10 +290,8 @@ public class Page2 extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            if(installed) {
-                                if(!tv.getText().equals(parser.getItemList().get(1))) {
-                                    spinner1.setSelection(1);
-                                }
+                            if(!tv.getText().equals(parser.getItemList().get(1))) {
+                                spinner1.setSelection(1);
                             }
                         }
                     });
@@ -330,8 +327,6 @@ public class Page2 extends Fragment {
                 }
                 image.setImageResource(R.drawable.ic_hook_icon);
 
-                installed = true;
-
                 Runnable run = new Runnable() {
                     @Override
                     public void run() {
@@ -366,7 +361,6 @@ public class Page2 extends Fragment {
                 Log.e(TAG, "checkInstalled: Rise-Q is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
-                installed = false;
             }
         }
         else
@@ -374,7 +368,6 @@ public class Page2 extends Fragment {
             Log.e(TAG, "checkInstalled: Rise-Q is not installed");
             tv.setText(R.string.notInstalled);
             image.setImageResource(R.drawable.ic_x_icon);
-            installed = false;
         }
     }
 }
