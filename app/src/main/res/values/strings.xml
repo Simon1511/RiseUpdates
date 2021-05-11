@@ -3,15 +3,15 @@
     <string name="tab_text_1">riseKernel</string>
     <string name="tab_text_2">Rise-Q</string>
     <string name="tab_text_3">riseTreble</string>
-    <string name="chooseVersion_text">Choose version:</string>
-    <string name="chooseType_text">Choose type:</string>
+    <string name="chooseVersion_text">Version:</string>
+    <string name="chooseType_text">Type:</string>
     <string name="afh_download">Androidfilehost</string>
     <string name="gdrive_download">Google Drive</string>
     <string name="settingsOption">Settings</string>
-    <string name="installedVersion">Installed version:</string>
+    <string name="installedVersion">Installed:</string>
     <string name="notInstalled">N/A</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="downloadMirror">Download mirror:</string>
+    <string name="downloadMirror">Mirror:</string>
     <string name="download">Download</string>
     <string-array name="updateInterval">
         <item>Every 12hrs</item>
