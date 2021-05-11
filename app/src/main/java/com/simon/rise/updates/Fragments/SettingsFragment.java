@@ -58,7 +58,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         loadDate();
 
         Preference aboutText = findPreference("about");
-        aboutText.setSummary("RiseUpdates by Simon1511.\nAll rights belong to me.\nv1.0 built on " + getString(R.string.buildDate));
+        aboutText.setSummary("RiseUpdates by Simon1511.\nAll rights reserved.\nv1.0 built on " + getString(R.string.buildDate));
 
         updateButton.setOnPreferenceClickListener(preference -> {
             updateButton.setSummary("Last checked: " + getDate());
