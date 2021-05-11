@@ -63,6 +63,9 @@ public class Page3 extends Fragment {
 
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
+    private boolean installed;
+    private TextView tv;
+
     public static Page3 newInstance(int index) {
         Page3 fragment = new Page3();
         Bundle bundle = new Bundle();
@@ -103,6 +106,8 @@ public class Page3 extends Fragment {
         onClickSpinners();
 
         onClickButtons();
+
+        setSpinnerSelection();
 
         return root;
     }
@@ -272,10 +277,41 @@ public class Page3 extends Fragment {
         });
     }
 
+    public void setSpinnerSelection() {
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                while(parser.getItemList().size() <= 1) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(parser.getItemList().size() >= 2) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(installed) {
+                                if(!tv.getText().equals(parser.getItemList().get(1))) {
+                                    spinner1.setSelection(1);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        Thread t = new Thread(run);
+        t.start();
+    }
+
     @SuppressLint("SetTextI18n")
     public void checkInstalled() {
         try {
-            TextView tv = fragmentView.findViewById(R.id.textView_version_page3);
+            tv = fragmentView.findViewById(R.id.textView_version_page3);
             Process process = new ProcessBuilder().command("/system/bin/cat", "/proc/mounts").redirectErrorStream(true).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -286,6 +322,7 @@ public class Page3 extends Fragment {
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
                 Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
                 tv.setText("v1.1");
+                installed = true;
                 image.setImageResource(R.drawable.ic_hook_icon);
 
                 // Newer versions will have a "ro.risetreble.version" prop
@@ -297,6 +334,7 @@ public class Page3 extends Fragment {
             {
                 Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
                 tv.setText(R.string.notInstalled);
+                installed = false;
                 image.setImageResource(R.drawable.ic_x_icon);
             }
 
