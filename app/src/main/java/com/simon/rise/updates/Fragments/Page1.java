@@ -75,6 +75,8 @@ public class Page1 extends Fragment {
     private TextView version;
     private TextView mirror;
 
+    private boolean installed;
+
     public static Page1 newInstance(int index) {
         Page1 fragment = new Page1();
         Bundle bundle = new Bundle();
@@ -134,6 +136,8 @@ public class Page1 extends Fragment {
         onClickButtons();
 
         checkInstalled();
+
+        setSpinnerSelection();
 
         if(props.read("ro.boot.bootloader").contains("A520") || props.read("ro.boot.bootloader").contains("A720")) {
             alr.updateAlert(parser, parser2, getActivity());
@@ -544,6 +548,70 @@ public class Page1 extends Fragment {
         adapter2.notifyDataSetChanged();
     }
 
+    public void setSpinnerSelection() {
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                while(parser.getItemList().size() <= 1) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(parser.getItemList().size() >= 2) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(installed) {
+                                if(props.read("ro.build.version.release").equals("10")) {
+                                    if(props.read("ro.treble.enabled").equals("false")) {
+                                        Log.d(TAG, "setSpinnerSelection: Device runs AOSP 10.0");
+                                        spinner1.setSelection(1);
+                                    }
+                                    else
+                                    if(props.read("ro.treble.enabled").equals("true")) {
+                                        if(props.read("ro.build.display.id").contains("Rise-Q")) {
+                                            Log.i(TAG, "setSpinnerSelection: Device runs OneUI 10.0");
+                                            if(spinner1.getItemAtPosition(3).equals("OneUI 10.0")) {
+                                                spinner1.setSelection(3);
+                                            }
+                                            else
+                                            {
+                                                spinner1.setSelection(0);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Log.d(TAG, "setSpinnerSelection: Device runs Treble 10.0");
+                                            spinner2.setSelection(2);
+                                        }
+                                    }
+
+                                }
+                                else
+                                if(props.read("ro.build.version.release").equals("9")) {
+                                    Log.d(TAG, "setSpinnerSelection: Device runs AOSP 9.0");
+                                    if(spinner1.getItemAtPosition(3).equals("AOSP 9.0")) {
+                                        spinner1.setSelection(3);
+                                    }
+                                    else
+                                    {
+                                        spinner1.setSelection(4);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        Thread t = new Thread(run);
+        t.start();
+    }
+
     @SuppressLint("SetTextI18n")
     public void checkInstalled() {
         try {
@@ -569,6 +637,8 @@ public class Page1 extends Fragment {
                         tv.setText(line.substring(lineIndex));
                     }
                     image.setImageResource(R.drawable.ic_hook_icon);
+
+                    installed = true;
 
                     Runnable run = new Runnable() {
                         @Override
@@ -603,6 +673,7 @@ public class Page1 extends Fragment {
                     Log.e(TAG, "checkInstalled: riseKernel is not installed");
                     tv.setText(R.string.notInstalled);
                     image.setImageResource(R.drawable.ic_x_icon);
+                    installed = false;
                 }
             }
             else
@@ -610,6 +681,7 @@ public class Page1 extends Fragment {
                 Log.e(TAG, "checkInstalled: riseKernel is not installed");
                 tv.setText(R.string.notInstalled);
                 image.setImageResource(R.drawable.ic_x_icon);
+                installed = false;
             }
         }
         catch(IOException e)  {
