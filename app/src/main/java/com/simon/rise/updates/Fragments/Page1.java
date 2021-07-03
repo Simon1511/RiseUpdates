@@ -124,10 +124,10 @@ public class Page1 extends Fragment {
         version = fragmentView.findViewById(R.id.textView_chooseVersion_page1);
         mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page1);
 
-        spinner2.setVisibility(View.INVISIBLE);
-        spinner3.setVisibility(View.INVISIBLE);
-        mirror.setVisibility(View.INVISIBLE);
-        version.setVisibility(View.INVISIBLE);
+        spinner2.setEnabled(false);
+        spinner3.setEnabled(false);
+        mirror.setEnabled(false);
+        version.setEnabled(false);
 
         onClickSpinners();
         onClickButtons();
@@ -229,10 +229,10 @@ public class Page1 extends Fragment {
                 if(spinner1.getSelectedItem().toString().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
-                    spinner2.setVisibility(View.INVISIBLE);
-                    spinner3.setVisibility(View.INVISIBLE);
-                    mirror.setVisibility(View.INVISIBLE);
-                    version.setVisibility(View.INVISIBLE);
+                    spinner2.setEnabled(false);
+                    spinner3.setEnabled(false);
+                    mirror.setEnabled(false);
+                    version.setEnabled(false);
                     dlButton.setEnabled(false);
 
                     parser3.getItemList().clear();
@@ -241,8 +241,8 @@ public class Page1 extends Fragment {
                 {
                     Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
                     spinner2.setSelection(0);
-                    spinner2.setVisibility(View.VISIBLE);
-                    version.setVisibility(View.VISIBLE);
+                    spinner2.setEnabled(true);
+                    version.setEnabled(true);
                 }
 
                 setSpinnerItems();
@@ -262,15 +262,15 @@ public class Page1 extends Fragment {
                 if(spinner2.getSelectedItem().equals("")) {
                     Log.i(TAG, "onItemSelected Spinner2: Empty");
                     spinner3.setSelection(0);
-                    spinner3.setVisibility(View.INVISIBLE);
-                    mirror.setVisibility(View.INVISIBLE);
+                    spinner3.setEnabled(false);
+                    mirror.setEnabled(false);
                     dlButton.setEnabled(false);
                 }
 
                 // Get download links for whatever is selected in the spinner
                 if(!spinner2.getSelectedItem().toString().equals("")) {
-                    spinner3.setVisibility(View.VISIBLE);
-                    mirror.setVisibility(View.VISIBLE);
+                    spinner3.setEnabled(true);
+                    mirror.setEnabled(true);
 
                     Log.i(TAG, "onItemSelected: " + spinner2.getSelectedItem().toString());
 
