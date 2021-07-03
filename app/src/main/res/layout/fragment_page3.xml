@@ -102,7 +102,7 @@
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
         android:backgroundTint="@color/gray"
-        app:layout_constraintBottom_toBottomOf="@+id/textView1_page3"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline4_page3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
@@ -111,11 +111,11 @@
         android:id="@+id/textView_installedVersion_page3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="35dp"
         android:text="@string/installedVersion"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4_page3"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent" />
@@ -124,22 +124,13 @@
         android:id="@+id/textView_version_page3"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="35dp"
         android:text=""
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4_page3"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1_page3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView1_page3"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4_page3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout

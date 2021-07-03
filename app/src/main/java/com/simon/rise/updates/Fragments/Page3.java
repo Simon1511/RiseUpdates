@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -313,13 +312,11 @@ public class Page3 extends Fragment {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             String line = bufferedReader.lines().collect(Collectors.joining());
-            ImageView image = fragmentView.findViewById(R.id.imageView1_page3);
             SystemProperties props = new SystemProperties();
 
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
                 Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
                 tv.setText("v1.1");
-                image.setImageResource(R.drawable.ic_hook_icon);
 
                 // Newer versions will have a "ro.risetreble.version" prop
                 if(props.read("ro.risetreble.version") != null) {
@@ -330,7 +327,6 @@ public class Page3 extends Fragment {
             {
                 Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
                 tv.setText(R.string.notInstalled);
-                image.setImageResource(R.drawable.ic_x_icon);
             }
 
             Runnable run = new Runnable() {
@@ -350,7 +346,6 @@ public class Page3 extends Fragment {
                             public void run() {
                                 if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("N/A")) {
                                     Log.i(TAG, "checkInstalled: riseTreble " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
-                                    image.setImageResource(R.drawable.ic_update_icon);
                                 }
                             }
                         });

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -309,7 +308,6 @@ public class Page2 extends Fragment {
 
         String variable = "v";
         String line = props.read("ro.build.display.id");
-        ImageView image = fragmentView.findViewById(R.id.imageView1_page2);
 
         if(line.contains(variable)) {
             if(line.contains("Rise-Q")) {
@@ -325,7 +323,6 @@ public class Page2 extends Fragment {
                     Log.i(TAG, "checkInstalled: Rise-Q " + str.substring(0, 4) + " installed");
                     tv.setText(str.substring(0, 4));
                 }
-                image.setImageResource(R.drawable.ic_hook_icon);
 
                 Runnable run = new Runnable() {
                     @Override
@@ -344,7 +341,6 @@ public class Page2 extends Fragment {
                                 public void run() {
                                     if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("N/A")) {
                                         Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
-                                        image.setImageResource(R.drawable.ic_update_icon);
                                     }
                                 }
                             });
@@ -360,14 +356,12 @@ public class Page2 extends Fragment {
             {
                 Log.e(TAG, "checkInstalled: Rise-Q is not installed");
                 tv.setText(R.string.notInstalled);
-                image.setImageResource(R.drawable.ic_x_icon);
             }
         }
         else
         {
             Log.e(TAG, "checkInstalled: Rise-Q is not installed");
             tv.setText(R.string.notInstalled);
-            image.setImageResource(R.drawable.ic_x_icon);
         }
     }
 }
