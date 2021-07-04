@@ -427,6 +427,7 @@ public class Page1 extends Fragment {
             else
             {
                 linuxVer = 14;
+                alr.kernelVersionAlert(linuxVer, getContext());
             }
             Log.i(TAG, "checkKernelVersion: Device is running a kernel with Linux 3.18." + linuxVer);
         }

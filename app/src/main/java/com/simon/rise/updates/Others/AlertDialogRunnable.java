@@ -103,6 +103,24 @@ public class AlertDialogRunnable {
         }
     }
 
+    public void kernelVersionAlert(int ver, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog alertDialog;
+
+        builder.setTitle("Old kernel version detected!");
+        builder.setMessage("It seems like you are running a ROM with the old kernel with Linux 3.18." + ver + "! Newer versions of riseKernel" +
+                        " only support ROMs with Linux 3.18.91 and newer, so update to a ROM with according kernel.");
+        builder.setCancelable(true);
+
+        alertDialog = builder.create();
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "I understand!", (dialog, which) ->
+                alertDialog.dismiss()
+        );
+
+        alertDialog.show();
+    }
+
     @SuppressLint("SetTextI18n")
     public void appUpdateAlert(JSONParser parser, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.PreferenceAlertDialog);
