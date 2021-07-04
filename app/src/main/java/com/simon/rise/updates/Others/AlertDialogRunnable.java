@@ -179,7 +179,8 @@ public class AlertDialogRunnable {
             }
 
             new Handler(Looper.getMainLooper()).post(() -> {
-                if(parser.getItemList().size() >= 1 && !parser.getItemList().get(0).equals("v" + BuildConfig.VERSION_NAME) && isConnected(context)) {
+                if(parser.getItemList().size() >= 1 && !parser.getItemList().get(0).equals("v" + BuildConfig.VERSION_NAME)
+                        && isConnected(context)) {
                     alertDialog.setTitle("Update found");
                     alertDialog.setMessage("\nNewest version: " + parser.getItemList().get(0) + "\n\nInstalled: v" + BuildConfig.VERSION_NAME);
 

@@ -648,7 +648,8 @@ public class Page1 extends Fragment {
                                     @Override
                                     public void run() {
                                         if(!parser2.getItemList().get(1).equals(line.substring(lineIndex))) {
-                                            Log.i(TAG, "checkInstalled: riseKernel " + line.substring(lineIndex) + " installed, but " + parser2.getItemList().get(1) + " is available");
+                                            Log.i(TAG, "checkInstalled: riseKernel " + line.substring(lineIndex) + " installed, but "
+                                                    + parser2.getItemList().get(1) + " is available");
                                         }
                                     }
                                 });

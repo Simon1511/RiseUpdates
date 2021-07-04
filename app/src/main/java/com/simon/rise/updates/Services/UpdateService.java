@@ -229,7 +229,8 @@ public class UpdateService extends Service {
 
                                             Intent intent = new Intent(context, MainActivity.class);
 
-                                            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                            PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                                                    1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                             Notification notification = new NotificationCompat.Builder(context, CH1_ID)
                                                     .setSmallIcon(R.drawable.ic_notification_logo)
@@ -318,7 +319,8 @@ public class UpdateService extends Service {
                                         Intent intent = new Intent(context, MainActivity.class);
                                         intent.putExtra("page", 1);
 
-                                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                                                1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                         Notification notification = new NotificationCompat.Builder(context, CH1_ID)
                                                 .setSmallIcon(R.drawable.ic_notification_logo)
@@ -392,7 +394,8 @@ public class UpdateService extends Service {
                                         Intent intent = new Intent(context, MainActivity.class);
                                         intent.putExtra("page", 2);
 
-                                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                                                1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                         Notification notification = new NotificationCompat.Builder(context, CH1_ID)
                                                 .setSmallIcon(R.drawable.ic_notification_logo)
@@ -463,7 +466,8 @@ public class UpdateService extends Service {
 
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
-                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                                        1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 Notification notification = new NotificationCompat.Builder(context, CH1_ID)
                                         .setSmallIcon(R.drawable.ic_notification_logo)

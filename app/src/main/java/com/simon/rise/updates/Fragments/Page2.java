@@ -340,7 +340,8 @@ public class Page2 extends Fragment {
                                 @Override
                                 public void run() {
                                     if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("N/A")) {
-                                        Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but " + parser.getItemList().get(1) + " is available");
+                                        Log.i(TAG, "checkInstalled: Rise-Q " + tv.getText() + " installed, but "
+                                                + parser.getItemList().get(1) + " is available");
                                     }
                                 }
                             });
