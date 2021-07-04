@@ -73,7 +73,7 @@ public class Page1 extends Fragment {
 
     private ArrayAdapter<String> adapter2;
 
-    private String linuxVer;
+    private int linuxVer;
 
     private TextView version;
     private TextView mirror;
@@ -418,17 +418,17 @@ public class Page1 extends Fragment {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = bufferedReader.readLine();
             if(line.contains("3.18.140")) {
-                linuxVer = "3.18.140";
+                linuxVer = 140;
             }
             else
             if(line.contains("3.18.91")) {
-                linuxVer = "3.18.91";
+                linuxVer = 91;
             }
             else
             {
-                linuxVer = "3.18.14";
+                linuxVer = 14;
             }
-            Log.i(TAG, "checkKernelVersion: Device is running a kernel with Linux " + linuxVer);
+            Log.i(TAG, "checkKernelVersion: Device is running a kernel with Linux 3.18." + linuxVer);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -463,7 +463,7 @@ public class Page1 extends Fragment {
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
             for (int i=0; i<list.size(); i++) {
-                if (linuxVer.equals("3.18.14") && Double.parseDouble(list.get(i)) >= 1.5) {
+                if (linuxVer == 14 && Double.parseDouble(list.get(i)) >= 1.5) {
                     list.remove(i);
                 }
             }
