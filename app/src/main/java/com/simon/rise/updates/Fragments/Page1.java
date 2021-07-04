@@ -30,6 +30,10 @@ import com.simon.rise.updates.Others.SupportButtons;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -434,46 +438,43 @@ public class Page1 extends Fragment {
     public void setSpinnerItems() {
         Log.i(TAG, "setSpinnerItems: Setup Spinner2 selections");
 
-        /* Clear the list every time the method is run
-        * and fill it up with getSecList(), which is a clone of getItemList()
-        * that remains untouched */
-        parser2.getItemList().clear();
-        parser2.getItemList().add("");
-        parser2.getItemList().addAll(parser2.getSecList());
+        // Create a clone of getSecList()
+        List<String> list = new ArrayList<>();
+        list.clear();
+        list.addAll(parser2.getSecList());
+        list.remove("");
+
+        for (int i=0; i<list.size(); i++) {
+            /* "v1.4-1" and "v3 (Pie)" can't be converted to double, so
+             just replace them with "v1.41" and "v3" */
+            if(list.get(i).equals("v1.4-1")) {
+                Collections.replaceAll(list, "v1.4-1", "v1.41");
+            }
+            if(list.get(i).equals("v3 (Pie)")) {
+                Collections.replaceAll(list, "v3 (Pie)", "v3");
+            }
+
+            Collections.replaceAll(list, list.get(i), list.get(i).substring(1));
+        }
+
+        if(!spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
+            list.remove("3");
+        }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
-            parser2.getItemList().remove("v3 (Pie)");
-
-            if(parser2.getItemList().size() >= 2) {
-                if (linuxVer.equals("3.18.14")) {
-                    // Count backwards
-                    for (int i = parser2.getItemList().size()-1; i>0; i--) {
-                        /* If the user runs a ROM with the old oreo kernel, we shouldnt show new
-                         * kernel updates as they are only for ROMs running the pie kernel */
-                        if (parser2.getItemList().get(i).equals("v1.4") || parser2.getItemList().get(i).equals("v1.3")
-                                || parser2.getItemList().get(i).equals("v1.2") || parser2.getItemList().get(i).equals("v1.1")
-                                || parser2.getItemList().get(i).equals("v1") || parser2.getItemList().get(i).equals("")) {
-                            // DUMMY
-                            Log.i(TAG, "setSpinnerItems:");
-                        } else {
-                            parser2.getItemList().remove(i);
-                        }
-                    }
-                }
-                else
-                if(linuxVer.equals("3.18.91") || linuxVer.equals("3.18.140")) {
-                    if(!parser2.getItemList().contains("v1.4-1")) {
-                        parser2.getItemList().add(parser2.getItemList().indexOf("v1.5"), "v1.4-1");
-                    }
+            for (int i=0; i<list.size(); i++) {
+                if (linuxVer.equals("3.18.14") && Double.parseDouble(list.get(i)) >= 1.5) {
+                    list.remove(i);
                 }
             }
         }
 
         if(spinner1.getSelectedItem().toString().equals("Treble 10.0")) {
-            parser2.getItemList().remove("v1.2");
-            parser2.getItemList().remove("v1.1");
-            parser2.getItemList().remove("v1");
-            parser2.getItemList().remove("v3 (Pie)");
+            for (int i=list.size()-1; i>0; i--) {
+                if (Double.parseDouble(list.get(i)) <= 1.2) {
+                    list.remove(i);
+                }
+            }
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 11.0")) {
@@ -485,34 +486,37 @@ public class Page1 extends Fragment {
         }
 
         if(spinner1.getSelectedItem().toString().equals("OneUI 10.0")) {
-            // Old and current versions (v1.4-1) don't have support for OneUI yet
-            parser2.getItemList().remove("v1.4-1");
-            parser2.getItemList().remove("v1.4");
-            parser2.getItemList().remove("v1.3");
-            parser2.getItemList().remove("v1.2");
-            parser2.getItemList().remove("v1.1");
-            parser2.getItemList().remove("v1");
-            parser2.getItemList().remove("v3 (Pie)");
+            for (int i=list.size()-1; i>0; i--) {
+                if (Double.parseDouble(list.get(i)) <= 1.41) {
+                    list.remove(i);
+                }
+            }
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
-            /* Only add those three to the list as we
-            * don't want any version newer than v1.4-1 in here */
-            parser2.getItemList().clear();
-            parser2.getItemList().add("");
-
-            if(!parser2.getItemList().contains("v1.4-1")) {
-                parser2.getItemList().add(1, "v1.4-1");
+            for (int i=0; i<list.size(); i++) {
+                if (Double.parseDouble(list.get(i)) > 1.41 && Double.parseDouble(list.get(i)) != 3) {
+                    list.remove(i);
+                }
             }
 
-            if(!parser2.getItemList().contains("v1.4")) {
-                parser2.getItemList().add(2, "v1.4");
-            }
-
-            if(!parser2.getItemList().contains("v3 (Pie)")) {
-                parser2.getItemList().add(3, "v3 (Pie)");
+            for (int i=list.size()-1; i>0; i--) {
+                if (Double.parseDouble(list.get(i)) < 1.4) {
+                    list.remove(i);
+                }
             }
         }
+
+        for (int i=0; i<list.size(); i++) {
+            Collections.replaceAll(list, "1.41", "1.4-1");
+            Collections.replaceAll(list, "3", "3 (Pie)");
+            Collections.replaceAll(list, list.get(i), "v" + list.get(i));
+        }
+
+        list.add(0, "");
+
+        parser2.getItemList().clear();
+        parser2.getItemList().addAll(list);
 
         // Run this always
         adapter2.notifyDataSetChanged();
