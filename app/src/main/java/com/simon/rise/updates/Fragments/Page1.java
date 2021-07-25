@@ -496,17 +496,13 @@ public class Page1 extends Fragment {
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 9.0")) {
-            for (int i=0; i<list.size(); i++) {
-                if (Double.parseDouble(list.get(i)) > 1.41 && Double.parseDouble(list.get(i)) != 3) {
-                    list.remove(i);
-                }
-            }
+            /* No new versions will support this, therefore this solution is more
+             future proof than the old one */
+            list.clear();
 
-            for (int i=list.size()-1; i>0; i--) {
-                if (Double.parseDouble(list.get(i)) < 1.4) {
-                    list.remove(i);
-                }
-            }
+            list.add("1.41");
+            list.add("1.4");
+            list.add("3");
         }
 
         for (int i=0; i<list.size(); i++) {
