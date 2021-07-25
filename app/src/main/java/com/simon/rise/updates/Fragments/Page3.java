@@ -165,8 +165,6 @@ public class Page3 extends Fragment {
     }
 
     public void onClickSpinners()  {
-        TextView mirror = fragmentView.findViewById(R.id.textView_chooseDownload_page3);
-
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -200,12 +198,10 @@ public class Page3 extends Fragment {
                 if(spinner2.getSelectedItem().equals("")) {
                     spinner3.setSelection(0);
                     spinner3.setEnabled(false);
-                    mirror.setEnabled(false);
                     dlButton.setEnabled(false);
                 }
 
                 if(spinner2.getSelectedItem() != "") {
-                    mirror.setEnabled(true);
                     spinner3.setEnabled(true);
 
                     Log.i(TAG, "onItemSelected spinner2: " + spinner2.getSelectedItem().toString());
