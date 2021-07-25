@@ -463,9 +463,21 @@ public class Page1 extends Fragment {
         }
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
-            for (int i=0; i<list.size(); i++) {
-                if (Double.parseDouble(list.get(i)) >= 1.5 && linuxVer == 14) {
-                    list.remove(i);
+            if(linuxVer == 14) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (Double.parseDouble(list.get(i)) >= 1.5) {
+                        list.remove(i);
+                    }
+                }
+                // For somehow removing this in the for-loop wont work
+                list.remove("1.41");
+            }
+            else
+            {
+                for (int i=list.size()-1; i>0; i--) {
+                    if (Double.parseDouble(list.get(i)) <= 1.4) {
+                        list.remove(i);
+                    }
                 }
             }
         }
