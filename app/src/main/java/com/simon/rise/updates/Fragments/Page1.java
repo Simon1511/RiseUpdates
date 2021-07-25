@@ -464,7 +464,7 @@ public class Page1 extends Fragment {
 
         if(spinner1.getSelectedItem().toString().equals("AOSP 10.0")) {
             for (int i=0; i<list.size(); i++) {
-                if (linuxVer == 14 && Double.parseDouble(list.get(i)) >= 1.5) {
+                if (Double.parseDouble(list.get(i)) >= 1.5 && linuxVer == 14) {
                     list.remove(i);
                 }
             }
