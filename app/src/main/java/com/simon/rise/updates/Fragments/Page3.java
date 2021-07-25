@@ -30,6 +30,9 @@ import com.simon.rise.updates.Others.SupportButtons;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -47,11 +50,16 @@ public class Page3 extends Fragment {
     pass a new instance of JSONParser to it */
     private final JSONParser parser = new JSONParser();
     private final JSONParser parser2 = new JSONParser();
+    private final JSONParser parser3 = new JSONParser();
     private final HTTPConnecting connect = new HTTPConnecting(parser);
     private final HTTPConnecting connect2 = new HTTPConnecting(parser2);
+    private final HTTPConnecting connect3 = new HTTPConnecting(parser3);
 
     private Spinner spinner1;
     private Spinner spinner2;
+    private Spinner spinner3;
+
+    private ArrayAdapter<String> adapter2;
 
     // URLs
     private static final String versionsURL = "https://raw.githubusercontent.com/Simon1511/random/master/versions.json";
@@ -63,6 +71,8 @@ public class Page3 extends Fragment {
     private final AlertDialogRunnable alr = new AlertDialogRunnable();
 
     private TextView tv;
+
+    private SystemProperties props = new SystemProperties();
 
     public static Page3 newInstance(int index) {
         Page3 fragment = new Page3();
@@ -112,15 +122,17 @@ public class Page3 extends Fragment {
 
     public void getVersions() {
         Log.i(TAG, "getVersions: Connecting to GitHub");
+        // Get available types from GitHub JSON
+        connect.connectURL("trebleType", versionsURL, "");
 
         // Get riseTreble versions from Github JSON
-        connect.connectURL("riseTreble-q", versionsURL, "");
+        connect2.connectURL("riseTreble", versionsURL, "");
     }
 
     public void initializeSpinners() {
         Log.i(TAG, "initializeSpinners: Initialize Spinner 1");
 
-        // Create a dropdown-list for versions
+        // Create a dropdown-list for types
         spinner1 = fragmentView.findViewById(R.id.spinner1_page3);
 
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser.getItemList());
@@ -134,8 +146,22 @@ public class Page3 extends Fragment {
 
         Log.i(TAG, "initializeSpinners: Initialize Spinner 2");
 
-        // Create a dropdown-list for download mirrors
+        // Create a dropdown-list for versions
         spinner2 = fragmentView.findViewById(R.id.spinner2_page3);
+
+        adapter2 = new ArrayAdapter<>(getContext(), R.layout.spinner_item, parser2.getItemList());
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        /* Show this as initial item in our spinner.
+        Otherwise, selected items won't show in spinner's preview. */
+        adapter2.add("");
+
+        spinner2.setAdapter(adapter2);
+
+        Log.i(TAG, "initializeSpinners: Initialize Spinner 3");
+
+        // Create a dropdown-list for download mirrors
+        spinner3 = fragmentView.findViewById(R.id.spinner3_page3);
     }
 
     public void onClickSpinners()  {
@@ -144,76 +170,23 @@ public class Page3 extends Fragment {
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinner1.getSelectedItem().equals("")) {
+                if(spinner1.getSelectedItem().toString().equals("")) {
+                    Log.i(TAG, "onItemSelected Spinner1: Empty");
                     spinner2.setSelection(0);
                     spinner2.setEnabled(false);
-                    mirror.setEnabled(false);
+                    spinner3.setSelection(0);
+                    spinner3.setEnabled(false);
                     dlButton.setEnabled(false);
                 }
+                else
+                {
+                    Log.i(TAG, "onItemSelected spinner1: " + spinner1.getSelectedItem().toString());
 
-                if(spinner1.getSelectedItem() != "") {
-                    mirror.setEnabled(true);
                     spinner2.setEnabled(true);
-
-                    Log.i(TAG, "onItemSelected Spinner1: " + spinner1.getSelectedItem().toString());
-
-                    Log.i(TAG, "onItemSelected Spinner1: Connecting to GitHub");
-
-                    // Get riseTreble downloads from Github JSON
-                    connect2.connectURL(spinner1.getSelectedItem().toString(), downloadURL, "riseTreble-q");
-                    Runnable run = () -> {
-                        /* Run this once in an if-clause and then in a while-loop */
-                        if(parser2.getItemList().size() <= 1) {
-                            new Handler(Looper.getMainLooper()).post(() ->
-                                    alr.updateAlert(parser, parser2, getActivity()));
-                        }
-
-                        while(parser2.getItemList().size() <= 1) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        if(parser2.getItemList().size() > 1) {
-                            new Handler(Looper.getMainLooper()).post(() -> {
-                                ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
-                                dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                dlAdapter.add("");
-                                for(int i = 0; i<parser2.getItemList().size(); i++) {
-                                    if (parser2.getItemList().get(i).contains("mega")) {
-                                        Log.i(TAG, "Spinner2: Add MEGA as download mirror");
-                                        dlAdapter.add("MEGA");
-                                    }
-
-                                    if (parser2.getItemList().get(i).contains("google")) {
-                                        Log.i(TAG, "Spinner2: Add Google Drive as download mirror");
-                                        dlAdapter.add("Google Drive");
-                                    }
-
-                                    if (parser2.getItemList().get(i).contains("1drv")) {
-                                        Log.i(TAG, "Spinner2: Add OneDrive as download mirror");
-                                        dlAdapter.add("OneDrive");
-                                    }
-
-                                    if (parser2.getItemList().get(i).contains("androidfilehost")) {
-                                        Log.i(TAG, "Spinner2: Add Androidfilehost as download mirror");
-                                        dlAdapter.add("Androidfilehost");
-                                    }
-                                }
-                                spinner2.setAdapter(dlAdapter);
-                                spinner2.setEnabled(true);
-                            });
-                        }
-                    };
-                    Thread t = new Thread(run);
-                    t.start();
+                    spinner2.setSelection(0);
                 }
 
-                if(!spinner1.getSelectedItem().toString().equals(parser2.getToUpdate())) {
-                    parser2.getItemList().clear();
-                }
+                setSpinnerItems();
             }
 
             @Override
@@ -224,14 +197,95 @@ public class Page3 extends Fragment {
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!spinner2.getSelectedItem().toString().equals("")) {
-                    Log.i(TAG, "onItemSelected Spinner2: " + spinner2.getSelectedItem().toString());
+                if(spinner2.getSelectedItem().equals("")) {
+                    spinner3.setSelection(0);
+                    spinner3.setEnabled(false);
+                    mirror.setEnabled(false);
+                    dlButton.setEnabled(false);
+                }
+
+                if(spinner2.getSelectedItem() != "") {
+                    mirror.setEnabled(true);
+                    spinner3.setEnabled(true);
+
+                    Log.i(TAG, "onItemSelected spinner2: " + spinner2.getSelectedItem().toString());
+
+                    Log.i(TAG, "onItemSelected spinner2: Connecting to GitHub");
+
+                    // Get riseTreble downloads from Github JSON
+                    connect3.connectURL(spinner2.getSelectedItem().toString(), downloadURL, "riseTreble");
+
+                    Runnable run = () -> {
+                        /* Run this once in an if-clause and then in a while-loop */
+                        if(parser3.getItemList().size() <= 1) {
+                            new Handler(Looper.getMainLooper()).post(() ->
+                                    alr.updateAlert(parser2, parser3, getActivity()));
+                        }
+
+                        while(parser3.getItemList().size() <= 1) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(parser3.getItemList().size() > 1) {
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                ArrayAdapter<CharSequence> dlAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item);
+                                dlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                dlAdapter.add("");
+                                for(int i = 0; i<parser3.getItemList().size(); i++) {
+                                    if (parser3.getItemList().get(i).contains("mega")) {
+                                        Log.i(TAG, "spinner3: Add MEGA as download mirror");
+                                        dlAdapter.add("MEGA");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("google")) {
+                                        Log.i(TAG, "spinner3: Add Google Drive as download mirror");
+                                        dlAdapter.add("Google Drive");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("1drv")) {
+                                        Log.i(TAG, "spinner3: Add OneDrive as download mirror");
+                                        dlAdapter.add("OneDrive");
+                                    }
+
+                                    if (parser3.getItemList().get(i).contains("androidfilehost")) {
+                                        Log.i(TAG, "spinner3: Add Androidfilehost as download mirror");
+                                        dlAdapter.add("Androidfilehost");
+                                    }
+                                }
+                                spinner3.setAdapter(dlAdapter);
+                                spinner3.setEnabled(true);
+                            });
+                        }
+                    };
+                    Thread t = new Thread(run);
+                    t.start();
+                }
+
+                if(!spinner2.getSelectedItem().toString().equals(parser3.getToUpdate())) {
+                    parser3.getItemList().clear();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!spinner3.getSelectedItem().toString().equals("")) {
+                    Log.i(TAG, "onItemSelected spinner3: " + spinner3.getSelectedItem().toString());
                     Log.i(TAG, "setButtons: Enabled");
                     dlButton.setEnabled(true);
                 }
                 else
                 {
-                    Log.i(TAG, "onItemSelected Spinner2: Empty");
+                    Log.i(TAG, "onItemSelected spinner3: Empty");
                     Log.i(TAG, "setButtons: Disabled");
                     dlButton.setEnabled(false);
                 }
@@ -247,19 +301,19 @@ public class Page3 extends Fragment {
         dlButton.setOnClickListener(v -> {
             String dlURL = "";
 
-            if (spinner2.getSelectedItem().equals("Google Drive")) {
-                dlURL = parser2.getItemList().get(0);
+            if (spinner3.getSelectedItem().equals("Google Drive")) {
+                dlURL = parser3.getItemList().get(0);
             }
             else
-            if (spinner2.getSelectedItem().equals("MEGA") || spinner2.getSelectedItem().equals("OneDrive")) {
-                dlURL = parser2.getItemList().get(1);
+            if (spinner3.getSelectedItem().equals("MEGA") || spinner3.getSelectedItem().equals("OneDrive")) {
+                dlURL = parser3.getItemList().get(1);
             }
             else
-            if (spinner2.getSelectedItem().equals("Androidfilehost")) {
-                dlURL = parser2.getItemList().get(2);
+            if (spinner3.getSelectedItem().equals("Androidfilehost")) {
+                dlURL = parser3.getItemList().get(2);
             }
 
-            Log.i(TAG, "download mirror: " + spinner2.getSelectedItem().toString());
+            Log.i(TAG, "download mirror: " + spinner3.getSelectedItem().toString());
 
             if (!dlURL.equals("")) {
                 try {
@@ -273,6 +327,49 @@ public class Page3 extends Fragment {
                 }
             }
         });
+    }
+
+    public void setSpinnerItems() {
+        // Create a clone of getSecList()
+        List<String> list = new ArrayList<>();
+        list.clear();
+        list.addAll(parser2.getSecList());
+        list.remove("");
+
+        list.remove("Navbar Enabler");
+
+        for (int i=0; i<list.size(); i++) {
+            Collections.replaceAll(list, list.get(i), list.get(i).substring(1));
+        }
+
+        if(spinner1.getSelectedItem().equals("riseTreble R")) {
+            list.remove("1.0");
+            list.remove("1.1");
+        }
+
+        if(spinner1.getSelectedItem().equals("riseTreble Q")) {
+            for(int i=0; i<list.size(); i++) {
+                if(Double.parseDouble(list.get(i)) > 1.1) {
+                    list.remove(i);
+                }
+            }
+        }
+
+        for (int i=0; i<list.size(); i++) {
+            Collections.replaceAll(list, list.get(i), "v" + list.get(i));
+        }
+
+        if(spinner1.getSelectedItem().equals("riseTreble Q")) {
+            list.add("Navbar Enabler");
+        }
+
+        list.add(0, "");
+
+        parser2.getItemList().clear();
+        parser2.getItemList().addAll(list);
+
+        // Run this always
+        adapter2.notifyDataSetChanged();
     }
 
     public void setSpinnerSelection() {
@@ -291,8 +388,20 @@ public class Page3 extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            if(!tv.getText().equals(parser.getItemList().get(1))) {
-                                spinner1.setSelection(1);
+                            if(props.read("ro.system.build.version.sdk").equals("29")) {
+                                for(int i=0; i<parser.getItemList().size(); i++) {
+                                    if(parser.getItemList().get(i).equals("riseTreble Q")) {
+                                        spinner1.setSelection(i);
+                                    }
+                                }
+                            }
+                            else
+                            if(props.read("ro.system.build.version.sdk").equals("30")) {
+                                for(int i=0; i<parser.getItemList().size(); i++) {
+                                    if(parser.getItemList().get(i).equals("riseTreble R")) {
+                                        spinner1.setSelection(i);
+                                    }
+                                }
                             }
                         }
                     });
@@ -315,24 +424,27 @@ public class Page3 extends Fragment {
             SystemProperties props = new SystemProperties();
 
             if(line.contains("/dev/block/platform/13540000.dwmmc0/by-name/VENDOR")) {
-                Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
-                tv.setText("v1.1");
-
                 // Newer versions will have a "ro.risetreble.version" prop
-                if(props.read("ro.risetreble.version") != null) {
+                if(!props.read("ro.risetreble.version").equals("")) {
+                    Log.i(TAG, "checkInstalled: riseTreble-R is installed");
                     tv.setText(props.read("ro.risetreble.version"));
+                }
+                else
+                {
+                    Log.i(TAG, "checkInstalled: riseTreble-Q is installed");
+                    tv.setText("v1.1");
                 }
             }
             else
             {
-                Log.e(TAG, "checkInstalled: riseTreble-Q is not installed");
+                Log.e(TAG, "checkInstalled: riseTreble is not installed");
                 tv.setText(R.string.notInstalled);
             }
 
             Runnable run = new Runnable() {
                 @Override
                 public void run() {
-                    while(parser.getItemList().size() <= 2) {
+                    while(parser2.getItemList().size() <= 2) {
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
@@ -340,13 +452,13 @@ public class Page3 extends Fragment {
                         }
                     }
 
-                    if(parser.getItemList().size() >= 3) {
+                    if(parser2.getItemList().size() >= 3) {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                if(!parser.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("N/A")) {
+                                if(!parser2.getItemList().get(1).contentEquals(tv.getText()) && !tv.getText().equals("N/A")) {
                                     Log.i(TAG, "checkInstalled: riseTreble " + tv.getText() + " installed, but "
-                                            + parser.getItemList().get(1) + " is available");
+                                            + parser2.getItemList().get(1) + " is available");
                                 }
                             }
                         });
