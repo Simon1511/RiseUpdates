@@ -478,12 +478,13 @@ public class Page1 extends Fragment {
             }
         }
 
-        if(spinner1.getSelectedItem().toString().equals("AOSP 11.0")) {
-            // DUMMY
-        }
-
-        if(spinner1.getSelectedItem().toString().equals("Treble 11.0")) {
-            // DUMMY
+        // Support for R was added in v1.6, so remove v1.5 and older
+        if(spinner1.getSelectedItem().toString().equals("AOSP 11.0") || spinner1.getSelectedItem().toString().equals("Treble 11.0")) {
+            for (int i=list.size()-1; i>0; i--) {
+                if (Double.parseDouble(list.get(i)) <= 1.5) {
+                    list.remove(i);
+                }
+            }
         }
 
         if(spinner1.getSelectedItem().toString().equals("OneUI 10.0")) {
