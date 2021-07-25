@@ -37,7 +37,21 @@ public class JSONParser {
                         Log.d(TAG, "parseJSON: Trying to parse first JSON Object");
                         JSONObject oneObject = jArray.getJSONObject(i);
 
-                        if(updateObject.equals("riseKernel") || updateObject.equals("rise-q") || updateObject.equals("riseTreble-q")) {
+                        if(updateObject.equals("")) {
+                            Log.i(TAG, "parseJSON: Requesting versions");
+
+                            Log.d(TAG, "parseJSON: Trying to parse second JSON Array");
+                            JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
+
+                            for(int j=0; j<jsonArray.length(); j++) {
+                                /* Add the String we got from the JSON to an
+                                Arraylist in case we need it later, e.g. for a spinner. */
+                                itemList.add(jsonArray.getString(j));
+                                secList.add(jsonArray.getString(j));
+                            }
+                        }
+                        else
+                        {
                             Log.i(TAG, "parseJSON: Requesting download links");
 
                             Log.d(TAG, "parseJSON: Trying to parse second JSON Object");
@@ -51,20 +65,6 @@ public class JSONParser {
                                 Arraylist in case we need it later, e.g. for a spinner. */
                                 itemList.add(vArray.getString(j));
                                 secList.add(vArray.getString(j));
-                            }
-                        }
-                        else
-                        {
-                            Log.i(TAG, "parseJSON: Requesting versions");
-
-                            Log.d(TAG, "parseJSON: Trying to parse second JSON Array");
-                            JSONArray jsonArray = oneObject.getJSONArray(toUpdate);
-
-                            for(int j=0; j<jsonArray.length(); j++) {
-                                /* Add the String we got from the JSON to an
-                                Arraylist in case we need it later, e.g. for a spinner. */
-                                itemList.add(jsonArray.getString(j));
-                                secList.add(jsonArray.getString(j));
                             }
                         }
                     } catch (JSONException e) {
