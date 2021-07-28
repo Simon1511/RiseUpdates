@@ -166,7 +166,10 @@ public class UpdateService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: Service was stopped!");
+        if(updateInterval != -1) {
+            Log.i(TAG, "onDestroy: Service was stopped, restarting...");
+            startForegroundService(new Intent(this, UpdateService.class));
+        }
     }
 
     @Override
